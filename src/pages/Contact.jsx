@@ -178,7 +178,7 @@ export default function Contact() {
             <div style={{ color: '#fff', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
       <FaEnvelope color="#fff" />
       <a
-        href="mailto:aiche@kfupm.edu.sa"
+        href="https://aiche@kfupm.edu.sa/"
         style={{ color: '#FFA837', textDecoration: 'none' }}
       >
         aiche@kfupm.edu.sa
@@ -206,13 +206,13 @@ export default function Contact() {
 /* ------- inline styles (simple, no CSS deps) ------- */
 const wrap = { maxWidth: 2000, margin: '0 auto', padding: '32px 16px', background: 'transparent' }
 const h1 = { fontSize: 32, margin: '0 0 8px' }
-const lead = { color: '#fff', marginBottom: 20, textAlign: 'left', marginLeft: 20 }
+const lead = { color: '#FF8737', marginBottom: 20, marginLeft: 0 }
 const grid = { display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 48 }
 const card = { border: 'none', borderRadius: 12, padding: 20, background: 'transparent' }
 const row = { marginBottom: 12 }
-const label = { display: 'block', fontSize: 14, color: '#fff', marginBottom: 6, fontWeight: 600 }
+const label = { display: 'block', fontSize: 14, color: '#fff', marginBottom: 6, fontWeight: 600, textAlign: 'left'}
 const input = { width: '100%', padding: '10px 12px', border: '1px solid #ddd', borderRadius: 10, outline: 'none', background: 'transparent' }
-const textarea = { ...input, resize: 'vertical' }
+const textarea = { ...input, resize: 'vertical', textAlign: 'left' }
 const btn = {
   background: '#FF8737',
   color: '#494949',
