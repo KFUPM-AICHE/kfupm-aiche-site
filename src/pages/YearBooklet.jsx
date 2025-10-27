@@ -2,10 +2,17 @@ import React from "react";
 
 function YearBooklet() {
   return (
-    <div>
+        <divstyle>
       <h1>Year Booklet</h1>
-      <p>Discover our annual highlights and achievements.</p>
-    </div>
+      <p>Discover our annual highlights and achievements. </p>
+          <iframe
+              src="https://online.fliphtml5.com/kslxc/zrfq/"
+              width="100%"
+              height="800px"
+              style={{ border: "none" }}
+              title="Year Booklet"
+          ></iframe>
+    </divstyle>
   );
 }
 
