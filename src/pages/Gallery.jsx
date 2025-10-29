@@ -11,7 +11,7 @@ const colors = {
 };
 
 // 🔗 Media Links
-const SECTION_IMAGE_1 = 'https://picsum.photos/600/400?random=1';
+const SECTION_IMAGE_1 = '/22.jpg';
 const SECTION_IMAGE_2 = 'https://picsum.photos/600/400?random=2'; 
 const SECTION_IMAGE_3 = 'https://picsum.photos/600/400?random=3'; 
 const VIDEO_REACT_COURSE = 'https://youtu.be/Qisz8K2tKwM'; 
