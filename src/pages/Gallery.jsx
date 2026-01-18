@@ -4,91 +4,50 @@ function Gallery() {
   const [selectedCategory, setSelectedCategory] = useState(null);
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  // الأقسام الخمسة مع صور الغلاف
+  // الأقسام الأربعة مع صور الغلاف
   const categories = [
     {
       id: 1,
-      name: 'Conferences and Competitions',
-      coverImage: '/892.jpg',
+      name: 'Social Events',
+      coverImage: '/the_sporting_event.jpg',
       slides: [
-        { image: '/892.jpg', title: 'Green Guardians Hackathon', description: 'Our team won first place in the Green Guardians Hackathon during the Energy and Climate Conference in Bahrain', date: '8-11 September' },
-        { image: '/239.jpg', title: 'ChemE Jeopardy Competition', description: 'Exciting competition testing chemical engineering knowledge', date: 'October 2024' },
-        { image: '/299.jpg', title: 'Research Conference Presentation', description: 'Students presented their research findings', date: 'November 2024' },
-        { image: '/2910.jpg', title: 'IDCE 2025 Conference', description: 'Three-day conference on refining and petrochemicals in Bahrain', date: '30 Sep - 2 Oct' },
-        { image: '/89.jpg', title: 'Innovation Competition', description: 'Showcasing innovative solutions to industry challenges', date: 'October 2024' },
-        { image: '/891.png', title: 'Regional Engineering Contest', description: 'Competing with universities across the region', date: 'November 2024' },
-        { image: '/710.jpg', title: 'Shark Tank Presentation', description: 'Students pitched innovative ideas to industry judges', date: '26 November' },
-        { image: '/1510.jpg', title: 'Design Competition Final', description: 'Final round of the chemical process design competition', date: 'December 2024' },
-        { image: '/2110.jpg', title: 'Academic Excellence Awards', description: 'Celebrating outstanding academic achievements', date: 'December 2024' },
-        { image: '/892.jpg', title: 'Year-End Conference', description: 'Annual conference showcasing student projects', date: 'December 2024' },
+        { image: '/kick_off_meeting.JPG', title: 'Kick-off Meeting', description: 'The Kick-off Meeting marked an inspiring beginning to the 25/26 academic year, setting the stage for a journey filled with ambition, collaboration, and purpose.', date: 'September 2024' },
+        { image: '/national_day_celebration.jpg', title: 'National Day Celebration', description: 'From a land of pride, we celebrated our Kingdom of Saudi Arabia.', date: '23 September' },
+        { image: '/the_sporting_event.jpg', title: 'The Sporting Event', description: 'Chapter members enjoyed an energetic padel session filled with fun.', date: 'October 2024' },
+        { image: '/football_match.jpg', title: 'Football Match', description: 'We proudly supported our team participating in the Sports Event alongside the Sports Club. A big thank you to the team for their outstanding performance!', date: 'October 2024' },
+        { image: '/teachers_day_booth.jpg', title: 'Teachers Day Booth', description: 'Through our teachers, dreams take shape and excellence becomes achievable.', date: 'October 2024' },
+    
+        { image: '/the_pink.jpg', title: 'Think Pink', description: 'In October We Think Pink!', date: 'October 2024' },
       ]
     },
     {
       id: 2,
       name: 'Seminars and Workshops',
-      coverImage: '/299.jpg',
+      coverImage: '/eng101.JPG',
       slides: [
-        { image: '/299.jpg', title: 'Machine Learning for Chemical Engineers', description: 'Engineer Ahmed Alolaywi shared expertise in AI and Machine Learning', date: '29 September' },
-        { image: '/710.jpg', title: 'Chemical Engineers Career Seminar', description: 'Engineers Hanan Al-Quraish and Hussain Al-Hassan shared their career journey', date: '7 October' },
-        { image: '/1510.jpg', title: 'COOP Experience Workshop', description: 'Virtual session with industry professionals about training opportunities', date: '15 October' },
-        { image: '/89.jpg', title: 'Process Safety Training', description: 'Essential training on safety protocols in chemical processes', date: '3 December' },
-        { image: '/891.png', title: 'LinkedIn Professional Development', description: 'Workshop on networking and personal branding', date: '9 December' },
-        { image: '/239.jpg', title: 'Hydrotreating Technology Seminar', description: 'Technical seminar on hydrotreating processes in industry', date: '30 November' },
-        { image: '/2910.jpg', title: 'Data Science Workshop', description: 'Hands-on workshop on data analysis for engineers', date: 'November 2024' },
-        { image: '/2110.jpg', title: 'Industry 4.0 Seminar', description: 'Exploring digital transformation in chemical industry', date: 'November 2024' },
-        { image: '/710.jpg', title: 'Sustainability in Engineering', description: 'Workshop on sustainable practices in chemical engineering', date: 'December 2024' },
-        { image: '/892.jpg', title: 'Leadership Skills Development', description: 'Developing leadership capabilities for future engineers', date: 'December 2024' },
+        { image: '/ml.jpg', title: 'Machine Learning for Chemical Engineers', description: 'Shedding light on the growing role of artificial intelligence in chemical engineering.', date: '29 September' },
+        { image: '/from_campus_to_career.JPG', title: 'From Campus to Career', description: 'Eng. Hussain Alhassan and Eng. Hanan Quraish shared valuable insights about the transition from student life to professional careers.', date: '7 October' },
+        { image: '/eng101.JPG', title: 'English 101 Help session', description: 'The English 101 Final Exam Workshop was successfully concluded with excellent attendance and active engagement.', date: 'November 2024' },
+        { image: '/procces.jpg', title: 'Process Safety Seminar', description: 'A Meaningful Conclusion to the Process Safety Seminar presented by Dr. Christos Argyropoulos.', date: '3 December' },
       ]
     },
     {
       id: 3,
       name: 'Industrial Visits',
-      coverImage: '/2910.jpg',
+      coverImage: '/bhig.png',
       slides: [
-        { image: '/2910.jpg', title: 'S-CHEM Company Visit', description: 'Students explored production processes and advanced manufacturing technologies', date: 'October 2024' },
-        { image: '/299.jpg', title: 'Petrochemical Plant Tour', description: 'Visit to major petrochemical facility in the Eastern Province', date: 'September 2024' },
-        { image: '/892.jpg', title: 'Oil Refinery Visit', description: 'Comprehensive tour of refining operations and processes', date: 'October 2024' },
-        { image: '/710.jpg', title: 'Water Treatment Facility', description: 'Learning about industrial water treatment technologies', date: 'November 2024' },
-        { image: '/239.jpg', title: 'Manufacturing Excellence Tour', description: 'Visiting world-class manufacturing facility', date: 'November 2024' },
-        { image: '/1510.jpg', title: 'Research Center Visit', description: 'Exploring cutting-edge research facilities', date: 'October 2024' },
-        { image: '/2110.jpg', title: 'Quality Control Laboratory', description: 'Understanding quality assurance in chemical production', date: 'November 2024' },
-        { image: '/89.jpg', title: 'Polymer Production Plant', description: 'Tour of advanced polymer manufacturing facility', date: 'December 2024' },
-        { image: '/891.png', title: 'Energy Company Visit', description: 'Learning about energy production and distribution', date: 'December 2024' },
-        { image: '/892.jpg', title: 'Pharmaceutical Manufacturing', description: 'Visit to pharmaceutical production facility', date: 'December 2024' },
+        { image: '/bhig.png', title: 'BHIG Visit', description: 'An enriching visit to BHIG – Jubail, where academic knowledge met real-world industrial practice.', date: 'October 2024' },
       ]
     },
     {
       id: 4,
-      name: 'Social Events',
-      coverImage: '/239.jpg',
+      name: 'Conferences and Competitions',
+      coverImage: '/shark.JPG',
       slides: [
-        { image: '/239.jpg', title: 'National Day Celebration', description: 'Celebrating the 94th Saudi National Day with pride and enthusiasm', date: '23 September' },
-        { image: '/2110.jpg', title: 'Clubs Fusion Competition', description: 'Inter-club competition promoting cooperation and team spirit', date: '27 October' },
-        { image: '/89.jpg', title: 'Letter Race for Members', description: 'Fun team-building activity for chapter members', date: '19 November' },
-        { image: '/891.png', title: 'Sporting Events Day', description: 'Annual sports day promoting health and teamwork', date: '8 December' },
-        { image: '/710.jpg', title: 'Member Appreciation Event', description: 'Recognizing outstanding contributions from chapter members', date: 'December 2024' },
-        { image: '/1510.jpg', title: 'Year-End Celebration', description: 'Celebrating achievements and milestones of the academic year', date: 'December 2024' },
-        { image: '/239.jpg', title: 'Welcome Week Activities', description: 'Welcoming new members to the AIChE family', date: 'September 2024' },
-        { image: '/892.jpg', title: 'Cultural Exchange Event', description: 'Celebrating diversity and cultural exchange', date: 'October 2024' },
-        { image: '/2910.jpg', title: 'Community Service Day', description: 'Giving back to our community through volunteer work', date: 'November 2024' },
-        { image: '/299.jpg', title: 'Annual Gala Dinner', description: 'Formal celebration of the year\'s achievements', date: 'December 2024' },
-      ]
-    },
-    {
-      id: 5,
-      name: 'Productions',
-      coverImage: '/891.png',
-      slides: [
-        { image: '/891.png', title: 'ChemE Car Project', description: 'Student-designed chemical engineering car demonstration', date: '14 December' },
-        { image: '/89.jpg', title: 'Process Simulation Project', description: 'Advanced simulation of chemical processes', date: 'November 2024' },
-        { image: '/892.jpg', title: 'Research Poster Exhibition', description: 'Showcasing student research through professional posters', date: 'October 2024' },
-        { image: '/239.jpg', title: 'Product Development Showcase', description: 'Presenting innovative product developments', date: 'November 2024' },
-        { image: '/710.jpg', title: 'Safety Video Production', description: 'Creating educational safety training videos', date: 'October 2024' },
-        { image: '/2910.jpg', title: 'Documentary Project', description: 'Documentary on chemical engineering careers', date: 'December 2024' },
-        { image: '/1510.jpg', title: 'Technical Publication', description: 'Student contributions to technical publications', date: 'November 2024' },
-        { image: '/2110.jpg', title: 'Digital Content Creation', description: 'Creating educational digital content for social media', date: 'October 2024' },
-        { image: '/299.jpg', title: 'Promotional Materials', description: 'Designing promotional materials for chapter events', date: 'September 2024' },
-        { image: '/891.png', title: 'Annual Yearbook', description: 'Producing the chapter\'s annual yearbook', date: 'December 2024' },
+        { image: '/892.jpg', title: 'Green Guardians Hackathon', description: 'We are proud of our team who secured first place at the Green Guardians Hackathon during the GWECCC in Bahrain out of 15 universities across GCC.', date: '8-11 September' },
+        { image: '/clubs.JPG', title: 'Clubs Fusion', description: 'Clubs Fusion concluded successfully, filled with enthusiasm and friendly competition among student clubs. Congrats to the winners!', date: '27 October' },
+        { image: '/shark.JPG', title: 'The Shark Tank', description: 'Aligning with Saudi Vision 2030, the event showcased innovative student solutions focused on the Net-Zero Waste Circular Economy!', date: '26 November' },
+        { image: '/res.JPG', title: 'The Research Competition', description: 'The competition showcased student engagement in research, and foster a positive, collaborative academic environment.', date: 'December 2024' },
       ]
     },
   ];
