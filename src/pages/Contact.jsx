@@ -1,14 +1,3 @@
-/*function Contact() {
-  return (
-    <div>
-      <h1>Contact Us</h1>
-      <p>Feel free to reach out to our team anytime.</p>
-    </div>
-  );
-}
-
-export default Contact; */
-
 import { useState } from 'react'
 import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope } from 'react-icons/fa'
 
@@ -60,7 +49,7 @@ export default function Contact() {
 
   return (
     <div style={wrap}>
-      <h1>Contact Us</h1>
+      <h1 style={{ color: '#494949' }}>Contact Us</h1>
       <p style={lead}>
         Contact us about anything related to our chapter. <br />
         We'll do our best to get back to you as soon as possible.
@@ -103,7 +92,7 @@ export default function Contact() {
               id="email"
               name="email"
               type="email"
-              placeholder="e.g. yourname@kfupm.edu.sa"
+              placeholder="e.g. yourname@domain.com"
               value={form.email}
               onChange={onChange}
               required
@@ -163,23 +152,25 @@ export default function Contact() {
 
         <aside style={{ ...card, padding: 16, textAlign: 'left', marginLeft: 200 }}>
           <div style={{ marginBottom: 12 }}>
-            <div style={{ fontWeight: 700, fontSize: 28 }}>KFUPM AIChE</div>
+            <div style={{ fontWeight: 700, fontSize: 28, color: '#494949' }}>
+              KFUPM AIChE
+            </div>
 
-            <div style={{ color: '#fff', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <FaMapMarkerAlt color = '#fff' />
+            <div style={{ color: '#494949', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <FaMapMarkerAlt color = '#494949' />
               <span>KFUPM, Dhahran, Saudi Arabia</span>
               </div>
 
-            <div style={{ color: '#fff', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
-              <FaPhoneAlt color = '#fff' />
+            <div style={{ color: '#494949', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <FaPhoneAlt color = '#494949' />
               <span>+1 555-555-5556</span>
               </div>
 
-            <div style={{ color: '#fff', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
-      <FaEnvelope color="#fff" />
+            <div style={{ color: '#494949', marginTop: 2, display: 'flex', alignItems: 'center', gap: 8 }}>
+      <FaEnvelope color="#494949" />
       <a
         href="https://aiche@kfupm.edu.sa/"
-        style={{ color: '#FFA837', textDecoration: 'none' }}
+        style={{ color: '#494949', textDecoration: 'none' }}
       >
         aiche@kfupm.edu.sa
       </a>
@@ -204,15 +195,36 @@ export default function Contact() {
 }
 
 /* ------- inline styles (simple, no CSS deps) ------- */
-const wrap = { maxWidth: 2000, margin: '0 auto', padding: '32px 16px', background: 'transparent' }
+const wrap = { maxWidth: 2000, margin: '0 auto', padding: '32px 16px', background: '#FFA837'}
 const h1 = { fontSize: 32, margin: '0 0 8px' }
-const lead = { color: '#FF8737', marginBottom: 20, marginLeft: 0 }
+const lead = { color: '#494949', marginBottom: 20, marginLeft: 0 }
 const grid = { display: 'grid', gridTemplateColumns: '1.1fr 0.9fr', gap: 48 }
 const card = { border: 'none', borderRadius: 12, padding: 20, background: 'transparent' }
 const row = { marginBottom: 12 }
-const label = { display: 'block', fontSize: 14, color: '#fff', marginBottom: 6, fontWeight: 600, textAlign: 'left'}
-const input = { width: '100%', padding: '10px 12px', border: '1px solid #ddd', borderRadius: 10, outline: 'none', background: 'transparent' }
-const textarea = { ...input, resize: 'vertical', textAlign: 'left' }
+const label = { 
+  display: 'block', 
+  fontSize: 14, 
+  color: '#494949', 
+  marginBottom: 6, 
+  fontWeight: 600, 
+  textAlign: 'left'
+}
+const input = {
+  width: '100%',
+  padding: '12px 14px',
+  border: '2px solid #494949',
+  borderRadius: 12,
+  outline: 'none',
+  background: '#494949',
+  color: '#FFA837',
+  fontSize: 15,
+}
+
+const textarea = {
+  ...input,
+  resize: 'vertical',
+  textAlign: 'left',
+}
 const btn = {
   background: '#FF8737',
   color: '#494949',
@@ -222,4 +234,7 @@ const btn = {
   cursor: 'pointer',
   fontWeight: 500
 }
+
+
+
 
