@@ -1,0 +1,245 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
+  line-height: 1.6;
+  font-weight: 400;
+  
+  --primary-color: #e87d24;
+  --dark-bg: #000;
+  --dark-gray: #1a1a1a;
+  --medium-gray: #2a2a2a;
+  --text-light: #ccc;
+  --text-white: #fff;
+  
+  color-scheme: light dark;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #000;
+  color: #fff;
+  overflow-x: hidden;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+a:hover {
+  color: var(--primary-color);
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+h1 {
+  font-size: 3.5rem;
+}
+
+h2 {
+  font-size: 2.5rem;
+}
+
+h3 {
+  font-size: 1.8rem;
+}
+
+p {
+  line-height: 1.7;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(232, 125, 36, 0.3);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+/* Smooth Scroll */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+/* Responsive Typography */
+@media (max-width: 768px) {
+  h1 {
+    font-size: 2.5rem;
+  }
+  
+  h2 {
+    font-size: 2rem;
+  }
+  
+  h3 {
+    font-size: 1.5rem;
+  }
+  
+  /* Mobile Navigation Adjustments */
+  nav {
+    padding: 10px 20px !important;
+  }
+  
+  /* Hide desktop navigation on mobile */
+  nav > div:nth-child(2) {
+    display: none !important;
+  }
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 2rem;
+  }
+  
+  h2 {
+    font-size: 1.7rem;
+  }
+  
+  h3 {
+    font-size: 1.3rem;
+  }
+}
+
+/* Scrollbar Styling */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #e87d24;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ff9942;
+}
+
+/* Selection Color */
+::selection {
+  background-color: #e87d24;
+  color: #fff;
+}
+
+::-moz-selection {
+  background-color: #e87d24;
+  color: #fff;
+}
+
+/* Loading States */
+.loading {
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* Utility Classes */
+.fade-in {
+  animation: fadeIn 0.6s ease-out;
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.slide-in-right {
+  animation: slideInRight 0.6s ease-out;
+}
+
+/* Card Hover Effects */
+.card-hover {
+  transition: all 0.3s ease;
+}
+
+.card-hover:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 30px rgba(232, 125, 36, 0.3);
+}
+
+/* Focus Visible for Accessibility */
+*:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* Print Styles */
+@media print {
+  nav, footer {
+    display: none;
+  }
+  
+  body {
+    background: white;
+    color: black;
+  }
+}
