@@ -324,7 +324,7 @@ function Gallery() {
               AIChE · KFUPM
             </div>
 
-            <h1 style={{ fontSize: 'clamp(3.5rem, 8vw, 6rem)', fontWeight: 800, color: '#494949', fontFamily: "'Sora', sans-serif", margin: '0 0 8px', letterSpacing: '-0.03em', lineHeight: 1.05 }}>
+            <h1 style={{ fontSize: 'clamp(2rem, 5vw, 4rem)', fontWeight: 800, color: '#494949', fontFamily: "'Sora', sans-serif", margin: '0 0 8px', letterSpacing: '-0.03em', lineHeight: 1.05 }}>
               Our Gallery
             </h1>
             <div style={{ width: '90px', height: '5px', background: 'linear-gradient(90deg, #FF8737, #ffb347)', borderRadius: '4px', marginBottom: '20px' }} />
