@@ -22,7 +22,7 @@ function Gallery() {
     {
       id: 2,
       name: 'Seminars & Workshops',
-      coverImage: '/eng101.JPG',
+      coverImage: '/procces.jpg',
       count: 4,
       slides: [
         { image: '/ml.jpg', title: 'Machine Learning for Chemical Engineers', description: 'Shedding light on the growing role of artificial intelligence in chemical engineering.', date: '29 September' },
@@ -43,13 +43,13 @@ function Gallery() {
     {
       id: 4,
       name: 'Conferences & Competitions',
-      coverImage: '/shark.JPG',
+      coverImage: '/clubs.png',
       count: 4,
       slides: [
         { image: '/892.jpg', title: 'Green Guardians Hackathon', description: 'We are proud of our team who secured first place at the Green Guardians Hackathon during the GWECCC in Bahrain out of 15 universities across GCC.', date: '8–11 September' },
-        { image: '/clubs.JPG', title: 'Clubs Fusion', description: 'Clubs Fusion concluded successfully, filled with enthusiasm and friendly competition among student clubs.', date: '27 October' },
-        { image: '/shark.JPG', title: 'The Shark Tank', description: 'Aligning with Saudi Vision 2030, the event showcased innovative student solutions focused on the Net-Zero Waste Circular Economy!', date: '26 November' },
-        { image: '/res.JPG', title: 'The Research Competition', description: 'The competition showcased student engagement in research and fostered a positive, collaborative academic environment.', date: 'December 2024' },
+        { image: '/clubs.png', title: 'Clubs Fusion', description: 'Clubs Fusion concluded successfully, filled with enthusiasm and friendly competition among student clubs.', date: '27 October' },
+        { image: '/sharkk.png', title: 'The Shark Tank', description: 'Aligning with Saudi Vision 2030, the event showcased innovative student solutions focused on the Net-Zero Waste Circular Economy!', date: '26 November' },
+        { image: '/res.png', title: 'The Research Competition', description: 'The competition showcased student engagement in research and fostered a positive, collaborative academic environment.', date: 'December 2024' },
       ]
     },
     {
@@ -59,11 +59,11 @@ function Gallery() {
       count: 5,
       isVideo: true,
       slides: [
-        { videoId: 'QeaLUNhj-5A', title: 'KFUPM AIChE Production 1', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
-        { videoId: '9ZZP5v7QnOk', title: 'KFUPM AIChE Production 2', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
-        { videoId: 'e2Xac9HAh9M', title: 'KFUPM AIChE Production 3', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
-        { videoId: 'a2P6vqqW1rE', title: 'KFUPM AIChE Production 4', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
-        { videoId: 'cmH6SvJsOnI', title: 'KFUPM AIChE Production 5', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
+        { videoId: 'QeaLUNhj-5A', title: 'Chem E Cube', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
+        { videoId: '9ZZP5v7QnOk', title: 'Chem E Car Day2', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
+        { videoId: 'e2Xac9HAh9M', title: 'Chemical Engineers Embrace AI in Digital Transformation', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
+        { videoId: 'a2P6vqqW1rE', title: 'شرح تخصص الهندسة الكيميائية', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
+        { videoId: 'cmH6SvJsOnI', title: 'Show and Tell', description: 'Chapter video production showcasing our events and activities.', date: '2024' },
       ]
     },
   ];
