@@ -1,7 +1,84 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
+/* ─────────────────────────────────────────────
+   SCROLL PROGRESS BAR
+───────────────────────────────────────────── */
+const ScrollProgressBar = () => {
+  const [progress, setProgress] = useState(0);
+  useEffect(() => {
+    const onScroll = () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+      setProgress(docHeight > 0 ? (scrollTop / docHeight) * 100 : 0);
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+  return (
+    <div style={{ position: 'fixed', top: 0, left: 0, zIndex: 9999, width: '100%', height: '3px', background: 'rgba(73,73,73,0.18)' }}>
+      <div style={{ height: '100%', width: `${progress}%`, background: 'linear-gradient(90deg, #FF8737, #ffb347)', transition: 'width 0.1s linear', borderRadius: '0 3px 3px 0', boxShadow: '0 0 8px rgba(255,135,55,0.7)' }} />
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   SCROLL REVEAL
+───────────────────────────────────────────── */
+const Reveal = ({ children, delay = 0 }) => {
+  const ref = useRef(null);
+  const [state, setState] = useState('hidden-below');
+  const [isAnimating, setIsAnimating] = useState(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const rect = node.getBoundingClientRect();
+    if (rect.top < window.innerHeight && rect.bottom > 0) setState('visible');
+  }, []);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (!node) return;
+    const obs = new IntersectionObserver(([entry]) => {
+      setIsAnimating(true);
+      if (entry.isIntersecting) {
+        setState('visible');
+      } else {
+        setState(entry.boundingClientRect.top < 0 ? 'hidden-above' : 'hidden-below');
+      }
+    }, { threshold: 0.05 });
+    obs.observe(node);
+    return () => obs.disconnect();
+  }, []);
+
+  const stateStyles = {
+    'hidden-below': { opacity: 0, transform: 'translateY(44px)' },
+    'visible':      { opacity: 1, transform: 'translateY(0px)' },
+    'hidden-above': { opacity: 0, transform: 'translateY(-28px)' },
+  };
+
+  return (
+    <div
+      ref={ref}
+      onTransitionEnd={() => setIsAnimating(false)}
+      style={{
+        transition: 'opacity 0.65s cubic-bezier(0.22,1,0.36,1), transform 0.65s cubic-bezier(0.22,1,0.36,1)',
+        willChange: isAnimating ? 'opacity, transform' : 'auto',
+        transitionDelay: state === 'visible' ? `${delay}ms` : '0ms',
+        ...stateStyles[state],
+      }}
+    >
+      {children}
+    </div>
+  );
+};
+
+/* ─────────────────────────────────────────────
+   MAIN COMPONENT
+───────────────────────────────────────────── */
 function Sponsor() {
   const [hoveredCard, setHoveredCard] = useState(null);
+  const [hoveredBenefit, setHoveredBenefit] = useState(null);
 
   const handleSponsorshipInquiry = (packageName) => {
     const recipient = "aiche@kfupm.edu.sa";
@@ -53,99 +130,165 @@ Best regards,
     }
   ];
 
-  const styles = {
-    container: { width: '100%', minHeight: '100vh', backgroundColor: '#FFA837', padding: '40px 20px' },
-    content: { maxWidth: '1200px', margin: '0 auto' },
-    header: { textAlign: 'center', marginBottom: '30px' },
-    yearLabel: { display: 'inline-block', padding: '8px 20px', backgroundColor: 'rgba(73,73,73,0.1)', border: '1px solid rgba(73,73,73,0.2)', borderRadius: '50px', fontSize: '0.75rem', fontWeight: '600', color: '#494949', letterSpacing: '1px', marginBottom: '15px' },
-    mainTitle: { fontSize: 'clamp(1.8rem, 5vw, 2.5rem)', fontWeight: '700', color: '#494949', marginBottom: '8px', letterSpacing: '-0.5px' },
-    subtitle: { fontSize: 'clamp(0.9rem, 2vw, 1.1rem)', color: '#494949', fontWeight: '400', opacity: 0.8, marginBottom: '25px' },
-    chooseText: { fontSize: 'clamp(1.2rem, 3vw, 1.6rem)', fontWeight: '600', color: '#494949', marginBottom: '30px' },
-    packagesGrid: { display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '30px' },
-    packageCard: { backgroundColor: '#494949', borderRadius: '20px', overflow: 'hidden', transition: 'all 0.3s ease', boxShadow: '0 4px 15px rgba(0,0,0,0.08)', position: 'relative' },
-    cardGlow: { position: 'absolute', top: '-3px', left: '-3px', right: '-3px', bottom: '-3px', borderRadius: '20px', zIndex: -1, transition: 'opacity 0.4s ease', filter: 'blur(15px)', opacity: 0 },
-    packageHeader: { padding: '25px 20px', textAlign: 'center', position: 'relative', color: '#FFFFFF' },
-    packageName: { fontSize: '2rem', fontWeight: '700', marginBottom: '15px', position: 'relative', zIndex: 2, color: '#FFFFFF', letterSpacing: '2px' },
-    priceMain: { fontSize: '1.5rem', fontWeight: '700', color: '#FFFFFF', marginBottom: '5px', position: 'relative', zIndex: 2 },
-    priceUSD: { fontSize: '0.9rem', color: '#FFFFFF', marginBottom: '8px', position: 'relative', zIndex: 2, opacity: 0.9 },
-    priceVat: { fontSize: '0.75rem', color: '#FFFFFF', fontStyle: 'italic', position: 'relative', zIndex: 2, opacity: 0.8 },
-    packageBody: { padding: '25px 20px', backgroundColor: '#FFFFFF' },
-    benefitsTitle: { fontSize: '1.1rem', fontWeight: '700', color: '#494949', marginBottom: '20px', position: 'relative', paddingBottom: '10px' },
-    benefitsLine: { position: 'absolute', bottom: 0, left: 0, width: '60px', height: '3px', backgroundColor: '#FFA837' },
-    benefitItem: { marginBottom: '18px', display: 'flex', gap: '12px', alignItems: 'flex-start', padding: '10px', borderRadius: '8px', transition: 'all 0.3s ease' },
-    benefitNumber: { width: '28px', height: '28px', borderRadius: '50%', backgroundColor: '#FFA837', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.8rem', fontWeight: '700', flexShrink: 0 },
-    benefitContent: { flex: 1 },
-    benefitTitle: { fontSize: '0.95rem', fontWeight: '700', color: '#494949', marginBottom: '6px' },
-    benefitDesc: { fontSize: '0.85rem', color: '#6B6B6B', lineHeight: '1.6' },
-    packageFooter: { padding: '20px', backgroundColor: '#F8F8F8', textAlign: 'center' },
-    selectButton: { width: '100%', padding: '14px 30px', border: 'none', borderRadius: '50px', fontSize: '0.9rem', fontWeight: '700', color: '#FFFFFF', cursor: 'pointer', transition: 'all 0.3s ease', textTransform: 'uppercase', letterSpacing: '1px', position: 'relative', overflow: 'hidden' },
-  };
-
   return (
-    <div style={styles.container}>
-      <div style={styles.content}>
-        <div style={styles.header}>
-          <div style={styles.yearLabel}>2025-2026</div>
-          <h1 style={styles.mainTitle}>Sponsorship Proposal</h1>
-          <p style={styles.subtitle}>KFUPM AIChE Students Chapter</p>
-          <div style={styles.chooseText}>Choose your partner</div>
-        </div>
+    <div style={{ width: '100%', minHeight: '100vh', backgroundColor: '#FFA837', fontFamily: "'DM Sans', sans-serif" }}>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=DM+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+        *, *::before, *::after { box-sizing: border-box; }
 
-        <div style={styles.packagesGrid}>
-          {sponsorshipPackages.map((pkg, index) => (
-            <div
-              key={pkg.id}
-              style={{
-                ...styles.packageCard,
-                transform: hoveredCard === index ? 'translateY(-10px) scale(1.02)' : 'translateY(0) scale(1)',
-                boxShadow: hoveredCard === index ? `0 15px 40px ${pkg.color}40` : '0 4px 15px rgba(0,0,0,0.08)',
-              }}
-              onMouseEnter={() => setHoveredCard(index)}
-              onMouseLeave={() => setHoveredCard(null)}
-            >
-              <div style={{ ...styles.cardGlow, background: `linear-gradient(135deg, ${pkg.color}60, ${pkg.color}20)`, opacity: hoveredCard === index ? 1 : 0 }} />
+        .noiseOverlay {
+          position: fixed; inset: 0;
+          pointer-events: none; z-index: 1; opacity: 0.025;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+          background-repeat: repeat; background-size: 200px 200px;
+        }
 
-              <div style={{ ...styles.packageHeader, background: `linear-gradient(135deg, ${pkg.color}, ${pkg.color}CC)` }}>
-                <div style={styles.packageName}>{pkg.name}</div>
-                <div style={styles.priceMain}>{pkg.price}</div>
-                <div style={styles.priceUSD}>{pkg.priceUSD}</div>
-                <div style={styles.priceVat}>*Prices subject to VAT</div>
-              </div>
+        @keyframes pulseBadge {
+          0%   { box-shadow: 0 0 0 0    rgba(255,135,55,0.5); }
+          70%  { box-shadow: 0 0 0 10px rgba(255,135,55,0); }
+          100% { box-shadow: 0 0 0 0    rgba(255,135,55,0); }
+        }
+        .pulseDot { animation: pulseBadge 2.4s ease-out infinite; }
 
-              <div style={styles.packageBody}>
-                <div style={styles.benefitsTitle}>
-                  Benefits
-                  <div style={styles.benefitsLine} />
-                </div>
-                {pkg.benefits.map((benefit, i) => (
-                  <div
-                    key={i}
-                    style={styles.benefitItem}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = '#F8F8F8'; e.currentTarget.style.transform = 'translateX(5px)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'transparent'; e.currentTarget.style.transform = 'translateX(0)'; }}
-                  >
-                    <div style={styles.benefitNumber}>{i + 1}</div>
-                    <div style={styles.benefitContent}>
-                      <div style={styles.benefitTitle}>{benefit.title}</div>
-                      <div style={styles.benefitDesc}>{benefit.description}</div>
-                    </div>
-                  </div>
-                ))}
-              </div>
+        .pkgCard {
+          transition: transform 0.35s cubic-bezier(0.22,1,0.36,1), box-shadow 0.35s ease;
+        }
+        .pkgCard:hover { transform: translateY(-12px) scale(1.02); }
 
-              <div style={styles.packageFooter}>
-                <button
-                  onClick={() => handleSponsorshipInquiry(pkg.name)}
-                  style={{ ...styles.selectButton, background: `linear-gradient(135deg, ${pkg.color}, ${pkg.color}DD)`, boxShadow: `0 5px 15px ${pkg.color}30` }}
-                  onMouseEnter={(e) => { e.target.style.transform = 'scale(1.05)'; e.target.style.boxShadow = `0 8px 20px ${pkg.color}50`; }}
-                  onMouseLeave={(e) => { e.target.style.transform = 'scale(1)'; e.target.style.boxShadow = `0 5px 15px ${pkg.color}30`; }}
-                >
-                  Select {pkg.name}
-                </button>
-              </div>
+        .selectBtn {
+          transition: transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease;
+        }
+        .selectBtn:hover { transform: scale(1.04); opacity: 0.92; }
+
+        .benefitRow {
+          transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .benefitRow:hover {
+          background: rgba(255,167,55,0.08) !important;
+          transform: translateX(4px);
+        }
+      `}</style>
+
+      <div className="noiseOverlay" />
+      <ScrollProgressBar />
+
+      {/* Top accent bar */}
+      <div style={{ height: '6px', background: 'linear-gradient(90deg, #FF8737, #ffb347, #FF8737)', position: 'relative', zIndex: 2 }} />
+
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: '80px 28px' }}>
+
+        {/* ── HERO HEADER ── */}
+        <Reveal>
+          <div style={{ marginBottom: '70px' }}>
+            {/* Kicker */}
+            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', background: '#494949', color: '#FFA837', borderRadius: '99px', padding: '6px 18px', fontSize: '0.75rem', fontWeight: 800, letterSpacing: '0.08em', textTransform: 'uppercase', fontFamily: "'Sora', sans-serif", marginBottom: '18px' }}>
+              <span className="pulseDot" style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#FF8737', display: 'inline-block' }} />
+              2025 – 2026
             </div>
+
+            <h1 style={{ fontSize: 'clamp(1.8rem, 3.5vw, 2.8rem)', fontWeight: 800, color: '#494949', fontFamily: "'Sora', sans-serif", margin: '0 0 8px', letterSpacing: '-0.03em', lineHeight: 1.05 }}>
+              Sponsorship Proposal
+            </h1>
+            <div style={{ width: '90px', height: '5px', background: 'linear-gradient(90deg, #FF8737, #ffb347)', borderRadius: '4px', marginBottom: '18px' }} />
+            <p style={{ fontSize: '1.05rem', color: '#494949', opacity: 0.75, maxWidth: '480px', fontFamily: "'DM Sans', sans-serif", lineHeight: 1.8 }}>
+              KFUPM AIChE Students Chapter
+            </p>
+          </div>
+        </Reveal>
+
+        {/* Divider */}
+        <Reveal>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '18px', marginBottom: '56px' }}>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, rgba(73,73,73,0.3))' }} />
+            <span style={{ fontSize: '0.75rem', fontWeight: 700, color: '#494949', opacity: 0.55, textTransform: 'uppercase', letterSpacing: '0.1em', fontFamily: "'Sora', sans-serif" }}>Choose your partner</span>
+            <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(73,73,73,0.3), transparent)' }} />
+          </div>
+        </Reveal>
+
+        {/* ── PACKAGES GRID ── */}
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '28px', alignItems: 'start' }}>
+          {sponsorshipPackages.map((pkg, index) => (
+            <Reveal key={pkg.id} delay={index * 100}>
+              <div
+                className="pkgCard"
+                style={{
+                  backgroundColor: '#494949',
+                  borderRadius: '24px',
+                  overflow: 'hidden',
+                  boxShadow: hoveredCard === index
+                    ? `0 24px 60px rgba(0,0,0,0.28), 0 0 0 2px ${pkg.color}80`
+                    : '0 8px 32px rgba(0,0,0,0.18)',
+                  position: 'relative',
+                }}
+                onMouseEnter={() => setHoveredCard(index)}
+                onMouseLeave={() => setHoveredCard(null)}
+              >
+                {/* ── Card header ── */}
+                <div style={{ background: `linear-gradient(135deg, ${pkg.color}, ${pkg.color}BB)`, padding: '32px 28px 28px', position: 'relative', overflow: 'hidden' }}>
+                  {/* Subtle circle decoration */}
+                  <div style={{ position: 'absolute', top: '-30px', right: '-30px', width: '140px', height: '140px', borderRadius: '50%', background: 'rgba(255,255,255,0.08)', pointerEvents: 'none' }} />
+                  <div style={{ position: 'absolute', bottom: '-50px', left: '-20px', width: '160px', height: '160px', borderRadius: '50%', background: 'rgba(255,255,255,0.05)', pointerEvents: 'none' }} />
+
+                  {/* Package name */}
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: 'rgba(255,255,255,0.75)', letterSpacing: '2px', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif", marginBottom: '8px' }}>Package</div>
+                  <div style={{ fontSize: '2.8rem', fontWeight: 800, color: '#fff', fontFamily: "'Sora', sans-serif", letterSpacing: '-0.02em', lineHeight: 1, marginBottom: '20px' }}>{pkg.name}</div>
+
+                  {/* Price */}
+                  <div style={{ borderTop: '1px solid rgba(255,255,255,0.25)', paddingTop: '18px' }}>
+                    <div style={{ fontSize: '1.6rem', fontWeight: 800, color: '#fff', fontFamily: "'Sora', sans-serif", letterSpacing: '-0.01em' }}>{pkg.price}</div>
+                    <div style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.8)', fontFamily: "'DM Sans', sans-serif", marginTop: '3px' }}>{pkg.priceUSD}</div>
+                    <div style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.65)', fontStyle: 'italic', fontFamily: "'DM Sans', sans-serif", marginTop: '4px' }}>*Prices subject to VAT</div>
+                  </div>
+                </div>
+
+                {/* ── Benefits ── */}
+                <div style={{ padding: '28px 28px 0' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 700, color: '#FFA837', letterSpacing: '1.4px', textTransform: 'uppercase', fontFamily: "'DM Sans', sans-serif", marginBottom: '6px' }}>What's included</div>
+                  <div style={{ width: '50px', height: '3px', background: 'linear-gradient(90deg, #FF8737, #ffb347)', borderRadius: '3px', marginBottom: '22px' }} />
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                    {pkg.benefits.map((benefit, i) => (
+                      <div
+                        key={i}
+                        className="benefitRow"
+                        style={{ display: 'flex', gap: '14px', alignItems: 'flex-start', padding: '12px 10px', borderRadius: '12px', background: 'transparent' }}
+                      >
+                        {/* Number bubble */}
+                        <div style={{ width: '28px', height: '28px', borderRadius: '50%', background: 'linear-gradient(135deg, #FF8737, #ffb347)', color: '#fff', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '0.78rem', fontWeight: 800, flexShrink: 0, fontFamily: "'Sora', sans-serif", boxShadow: '0 3px 10px rgba(255,135,55,0.35)' }}>
+                          {i + 1}
+                        </div>
+                        <div style={{ flex: 1 }}>
+                          <div style={{ fontSize: '0.92rem', fontWeight: 700, color: '#FFA837', marginBottom: '5px', fontFamily: "'Sora', sans-serif" }}>{benefit.title}</div>
+                          <div style={{ fontSize: '0.83rem', color: 'rgba(255,255,255,0.6)', lineHeight: '1.65', fontFamily: "'DM Sans', sans-serif" }}>{benefit.description}</div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* ── CTA button ── */}
+                <div style={{ padding: '24px 28px 28px' }}>
+                  <button
+                    className="selectBtn"
+                    onClick={() => handleSponsorshipInquiry(pkg.name)}
+                    style={{
+                      width: '100%', padding: '15px 30px', border: 'none',
+                      borderRadius: '50px', fontSize: '0.88rem', fontWeight: 800,
+                      color: pkg.id === 'gold' ? '#494949' : '#494949',
+                      cursor: 'pointer', textTransform: 'uppercase', letterSpacing: '1.2px',
+                      fontFamily: "'Sora', sans-serif",
+                      background: `linear-gradient(135deg, ${pkg.color}, ${pkg.color}CC)`,
+                      boxShadow: `0 6px 20px ${pkg.color}50`,
+                    }}
+                  >
+                    Select {pkg.name}
+                  </button>
+                </div>
+              </div>
+            </Reveal>
           ))}
         </div>
+
       </div>
     </div>
   );
