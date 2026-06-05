@@ -2,11 +2,9 @@ import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
 import { useState } from "react";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
-import Calendar from "./pages/Calendar.jsx";
 import Contact from "./pages/Contact.jsx";
 import Sponsor from "./pages/Sponsor.jsx";
 import Gallery from "./pages/Gallery.jsx";
-import YearBooklet from "./pages/YearBooklet.jsx";
 import Newsletter from "./pages/Newsletter.jsx";
 
 const logo = "/logo.png";
@@ -41,6 +39,9 @@ function App() {
       display: "flex",
       gap: "30px",
       alignItems: "center",
+      position: "absolute",
+      left: "50%",
+      transform: "translateX(-50%)",
     },
     link: {
       color: "#333",
@@ -53,22 +54,6 @@ function App() {
     },
     linkHover: {
       color: "#e87d24",
-    },
-    navRight: {
-      display: "flex",
-      alignItems: "center",
-      gap: "20px",
-    },
-    cartIcon: {
-      fontSize: "20px",
-      cursor: "pointer",
-      color: "#333",
-    },
-    socialText: {
-      fontSize: "14px",
-      fontWeight: "600",
-      color: "#333",
-      marginRight: "10px",
     },
     main: {
       backgroundColor: "#000",
@@ -155,19 +140,12 @@ function App() {
           <div style={styles.navCenter}>
             <Link to="/" style={styles.link}>Home</Link>
             <Link to="/about" style={styles.link}>About us</Link>
-            <Link to="/calendar" style={styles.link}>Our Calendar</Link>
-            <Link to="/contact" style={styles.link}>Contact us</Link>
             <Link to="/sponsor" style={styles.link}>Be a sponsor</Link>
             <Link to="/gallery" style={styles.link}>Our gallery</Link>
-            <Link to="/yearbooklet" style={styles.link}>Year Booklet</Link>
             <Link to="/newsletter" style={styles.link}>Newsletter</Link>
+            <Link to="/contact" style={styles.link}>Contact us</Link>
           </div>
         )}
-
-        <div style={styles.navRight}>
-          <span style={styles.cartIcon}>🛒 0</span>
-          <span style={styles.socialText}>Follow us</span>
-        </div>
 
         <div 
           style={styles.hamburger}
@@ -183,12 +161,10 @@ function App() {
         <div style={{ ...styles.mobileMenu, display: "flex" }}>
           <Link to="/" style={styles.link} onClick={() => setMenuOpen(false)}>Home</Link>
           <Link to="/about" style={styles.link} onClick={() => setMenuOpen(false)}>About us</Link>
-          <Link to="/calendar" style={styles.link} onClick={() => setMenuOpen(false)}>Our Calendar</Link>
-          <Link to="/contact" style={styles.link} onClick={() => setMenuOpen(false)}>Contact us</Link>
           <Link to="/sponsor" style={styles.link} onClick={() => setMenuOpen(false)}>Be a sponsor</Link>
           <Link to="/gallery" style={styles.link} onClick={() => setMenuOpen(false)}>Our gallery</Link>
-          <Link to="/yearbooklet" style={styles.link} onClick={() => setMenuOpen(false)}>Year Booklet</Link>
           <Link to="/newsletter" style={styles.link} onClick={() => setMenuOpen(false)}>Newsletter</Link>
+          <Link to="/contact" style={styles.link} onClick={() => setMenuOpen(false)}>Contact us</Link>
         </div>
       )}
 
@@ -196,11 +172,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
-          <Route path="/calendar" element={<Calendar />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/sponsor" element={<Sponsor />} />
           <Route path="/gallery" element={<Gallery />} />
-          <Route path="/yearbooklet" element={<YearBooklet />} />
           <Route path="/newsletter" element={<Newsletter />} />
         </Routes>
       </main>
