@@ -162,7 +162,7 @@ function Gallery() {
 
         <div style={{ height: '6px', background: 'linear-gradient(90deg, #FF8737, #ffb347, #FF8737)' }} />
 
-        <div style={{ maxWidth: '1300px', margin: '0 auto', padding: '50px 28px' }}>
+        <div style={{ maxWidth: '1300px', margin: '0 auto', padding: 'clamp(24px, 4vw, 50px) clamp(16px, 4vw, 28px)' }}>
 
           {/* Back + breadcrumb */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '48px' }}>
@@ -192,7 +192,7 @@ function Gallery() {
           </div>
 
           {/* Main layout */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 380px', gap: '32px', alignItems: 'start' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(300px, 100%), 1fr))', gap: '32px', alignItems: 'start' }}>
 
             {/* Main media */}
             <div style={{ borderRadius: '20px', overflow: 'hidden', backgroundColor: '#494949', boxShadow: '0 12px 50px rgba(73,73,73,0.35)', position: 'relative' }}>
@@ -314,7 +314,7 @@ function Gallery() {
 
       <div style={{ height: '6px', background: 'linear-gradient(90deg, #FF8737, #ffb347, #FF8737)', position: 'relative', zIndex: 2 }} />
 
-      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1300px', margin: '0 auto', padding: '80px 28px' }}>
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1300px', margin: '0 auto', padding: 'clamp(32px, 5vw, 80px) clamp(16px, 4vw, 28px)' }}>
 
         {/* ── HERO HEADER ── */}
         <Reveal>
@@ -344,7 +344,7 @@ function Gallery() {
 
         {/* ── BENTO GRID ROW 1 ── */}
         <Reveal delay={80}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1.65fr 1fr', gap: '20px', marginBottom: '20px' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(260px, 100%), 1fr))', gap: '20px', marginBottom: '20px' }}>
 
             {/* Cat 0 — Featured large */}
             <div

@@ -386,6 +386,24 @@ export default function About() {
           background: linear-gradient(90deg, transparent, rgba(73,73,73,0.28), transparent);
           margin: 60px 0;
         }
+
+        /* ── Mobile responsive ───────────────── */
+        @media (max-width: 860px) {
+          /* Hero: stack columns */
+          [style*="gridTemplateColumns: '1.1fr 1fr'"] {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
+          /* Vision row: stack */
+          [style*="gridTemplateColumns: '1.1fr 0.9fr'"] {
+            grid-template-columns: 1fr !important;
+            gap: 40px !important;
+          }
+          /* Pyramid rows: wrap */
+          [style*="flexWrap: 'nowrap'"] {
+            flex-wrap: wrap !important;
+          }
+        }
       `}</style>
 
       <div className="noiseOverlay" />
@@ -746,13 +764,13 @@ const styles = {
     minHeight: '100vh',
     fontFamily: "'DM Sans', sans-serif",
   },
-  container: { maxWidth: '1400px', margin: '0 auto', padding: '80px 20px' },
+  container: { maxWidth: '1400px', margin: '0 auto', padding: 'clamp(32px, 5vw, 80px) clamp(16px, 4vw, 40px)' },
 
   heroWrap:  { marginBottom: '120px' },
   heroPanel: { padding: '20px' },
-  heroGrid:  { display: 'grid', gridTemplateColumns: '1.1fr 1fr', gap: '100px' },
+  heroGrid:  { display: 'grid', gridTemplateColumns: 'clamp(1fr, 50%, 1.1fr) 1fr', gap: 'clamp(30px, 6vw, 100px)' },
   heroLeft:  { display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '22px' },
-  heroRight: { textAlign: 'left', marginTop: '170px' },
+  heroRight: { textAlign: 'left', marginTop: 'clamp(20px, 8vw, 170px)' },
 
   heroKickerLeft: {
     gridColumn: '1 / span 2',
@@ -793,10 +811,10 @@ const styles = {
   photoWide: { gridColumn: '1 / span 2' },
 
   visionRow: {
-    display: 'grid', gridTemplateColumns: '1.1fr 0.9fr',
-    gap: '100px', marginBottom: '140px', alignItems: 'center',
+    display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))',
+    gap: 'clamp(30px, 6vw, 100px)', marginBottom: '140px', alignItems: 'center',
   },
-  visionText: { paddingLeft: '90px' },
+  visionText: { paddingLeft: 'clamp(0px, 4vw, 90px)' },
   visionAnim: {
     maxWidth: '420px', marginTop: '-20px',
     marginLeft: '-110px', justifySelf: 'center',
@@ -834,7 +852,7 @@ const styles = {
   },
   pyramidRow: {
     display: 'flex', justifyContent: 'center',
-    gap: '18px', flexWrap: 'nowrap', width: '100%',
+    gap: '18px', flexWrap: 'wrap', width: '100%',
   },
   pyramidBlock: {
     borderRadius: '16px', padding: '18px 16px',

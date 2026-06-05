@@ -146,12 +146,7 @@ html {
   
   /* Mobile Navigation Adjustments */
   nav {
-    padding: 10px 20px !important;
-  }
-  
-  /* Hide desktop navigation on mobile */
-  nav > div:nth-child(2) {
-    display: none !important;
+    padding: 0 !important;
   }
 }
 

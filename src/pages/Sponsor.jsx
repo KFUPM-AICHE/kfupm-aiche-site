@@ -175,7 +175,7 @@ Best regards,
       {/* Top accent bar */}
       <div style={{ height: '6px', background: 'linear-gradient(90deg, #FF8737, #ffb347, #FF8737)', position: 'relative', zIndex: 2 }} />
 
-      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: '80px 28px' }}>
+      <div style={{ position: 'relative', zIndex: 2, maxWidth: '1200px', margin: '0 auto', padding: 'clamp(32px, 5vw, 80px) clamp(16px, 4vw, 28px)' }}>
 
         {/* ── HERO HEADER ── */}
         <Reveal>
@@ -206,7 +206,7 @@ Best regards,
         </Reveal>
 
         {/* ── PACKAGES GRID ── */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(340px, 1fr))', gap: '28px', alignItems: 'start' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(min(340px, 100%), 1fr))', gap: '28px', alignItems: 'start' }}>
           {sponsorshipPackages.map((pkg, index) => (
             <Reveal key={pkg.id} delay={index * 100}>
               <div
