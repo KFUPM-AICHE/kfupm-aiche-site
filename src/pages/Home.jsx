@@ -85,11 +85,18 @@ const latestEvents = [
 ];
 
 const partners = [
-  "Industry Partners",
-  "Academic Collaborators",
-  "Event Sponsors",
-  "Alumni Network",
-  "Student Community",
+  {
+    name: "Gold Sponsor",
+    image: "/Gold Sponsor.png",
+  },
+  {
+    name: "Media Partner",
+    image: "/Media Partner.png",
+  },
+  {
+    name: "Service Partner",
+    image: "/Service Partner.svg",
+  },
 ];
 
 function Home() {
@@ -525,15 +532,11 @@ function Home() {
           background: linear-gradient(180deg, #fff6ed 0%, #fff1e3 100%);
         }
 
-        .events-grid,
-        .partners-grid {
+        .events-grid {
           display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
           gap: 24px;
           margin-top: 36px;
-        }
-
-        .events-grid {
-          grid-template-columns: repeat(3, minmax(0, 1fr));
         }
 
         .event-card {
@@ -694,35 +697,35 @@ function Home() {
         }
 
         .partners-grid {
-          grid-template-columns: repeat(5, minmax(0, 1fr));
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 24px;
+          margin-top: 36px;
         }
 
-        .partner-chip {
-          min-height: 118px;
+        .partner-card {
+          min-height: 180px;
           display: flex;
           align-items: center;
           justify-content: center;
-          text-align: center;
-          padding: 20px;
-          border-radius: 22px;
+          padding: 24px;
+          border-radius: 24px;
           background: linear-gradient(180deg, #ffffff 0%, #fff7ef 100%);
           border: 1px solid rgba(232, 125, 36, 0.1);
-          color: #2b2b2b;
-          font-weight: 700;
-          letter-spacing: -0.02em;
           box-shadow: 0 14px 32px rgba(232, 125, 36, 0.08);
           transition: transform 0.25s ease, box-shadow 0.25s ease;
         }
 
-        .partner-chip:hover {
+        .partner-card:hover {
           transform: translateY(-6px);
           box-shadow: 0 20px 40px rgba(232, 125, 36, 0.14);
         }
 
-        .partner-note {
-          margin-top: 22px;
-          color: #766c66;
-          font-size: 0.95rem;
+        .partner-logo {
+          max-width: 100%;
+          max-height: 120px;
+          object-fit: contain;
+          display: block;
         }
 
         @keyframes floatBadge {
@@ -801,7 +804,7 @@ function Home() {
 
           .achievement-card,
           .event-card,
-          .partner-chip,
+          .partner-card,
           .member-card {
             border-radius: 24px;
           }
@@ -829,8 +832,8 @@ function Home() {
             </p>
 
             <div className="hero-actions">
-              <Link to="/calendar" className="button-primary">
-                Explore Events
+              <Link to="/gallery" className="button-primary">
+                Explore Gallery
               </Link>
               <Link to="/gallery" className="button-secondary">
                 View Gallery
@@ -1012,16 +1015,15 @@ function Home() {
 
           <div className="partners-grid">
             {partners.map((partner) => (
-              <div key={partner} className="partner-chip">
-                {partner}
+              <div key={partner.name} className="partner-card">
+                <img
+                  src={encodeURI(partner.image)}
+                  alt={partner.name}
+                  className="partner-logo"
+                />
               </div>
             ))}
           </div>
-
-          <p className="partner-note">
-            You can replace these placeholders with actual partner names or logos
-            anytime from the same array inside <strong>Home.jsx</strong>.
-          </p>
         </div>
       </section>
     </div>

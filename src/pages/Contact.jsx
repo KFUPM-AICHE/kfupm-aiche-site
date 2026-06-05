@@ -1,326 +1,734 @@
 import { useState } from 'react'
-import { FaMapMarkerAlt, FaPhoneAlt, FaEnvelope, FaInstagram, FaTwitter, FaLinkedin } from 'react-icons/fa'
+import { FaInstagram, FaLinkedin } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 
 export default function Contact() {
-    const [form, setForm] = useState({ name: '', phone: '', email: '', subject: '', message: '' })
-    const [status, setStatus] = useState(null)
-    const [busy, setBusy] = useState(false)
-    const [focused, setFocused] = useState(null)
+  const [form, setForm] = useState({
+    name: '', phone: '', email: '', interest: '', subject: '', message: '',
+  })
+  const [errors, setErrors] = useState({})
+  const [busy, setBusy] = useState(false)
+  const [submitted, setSubmitted] = useState(false)
 
-    const onChange = (e) => {
-        const { name, value } = e.target
-        setForm((f) => ({ ...f, [name]: value }))
-    }
+  const validateEmail = (v) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v)
+  const validatePhone = (v) => {
+    if (!v.trim()) return true
+    const digits = v.replace(/\D/g, '')
+    return /^[0-9+\-\s()]{7,20}$/.test(v.trim()) && digits.length >= 7 && digits.length <= 15
+  }
 
-    const validate = () => {
-        if (!form.name.trim()) return 'Please enter your name.'
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) return 'Please enter a valid email.'
-        if (form.phone.trim()) {
-            const digitsOnly = form.phone.replace(/\D/g, '')
-            const phoneRegex = /^[0-9+\-\s()]{7,20}$/
-            if (!phoneRegex.test(form.phone.trim()) || digitsOnly.length !== 12)
-                return 'Please enter a valid phone number.'
-        }
-        if (!form.subject.trim()) return 'Please add a subject.'
-        return null
-    }
+  const onChange = (e) => {
+    const { name, value } = e.target
+    setForm((f) => ({ ...f, [name]: value }))
+    if (name === 'email') {
+      setErrors((err) => ({ ...err, email: value && !validateEmail(value) ? 'Please enter a valid email address.' : '' }))
+    }
+    if (name === 'phone') {
+      setErrors((err) => ({ ...err, phone: value && !validatePhone(value) ? 'Enter a valid phone number (e.g. +966 512345678).' : '' }))
+    }
+  }
 
-    const onSubmit = async (e) => {
-        e.preventDefault()
-        const err = validate()
-        if (err) { setStatus({ ok: false, text: err }); return }
-        setBusy(true); setStatus(null)
-        await new Promise((r) => setTimeout(r, 600))
-        setBusy(false)
-        setStatus({ ok: true, text: 'Thanks! We received your message.' })
-    }
+  const onSubmit = async (e) => {
+    e.preventDefault()
+    const newErrors = {}
+    if (!form.name.trim()) newErrors.name = 'Please enter your name.'
+    if (!form.email.trim() || !validateEmail(form.email)) newErrors.email = 'Please enter a valid email address.'
+    if (form.phone && !validatePhone(form.phone)) newErrors.phone = 'Enter a valid phone number.'
+    if (!form.subject.trim()) newErrors.subject = 'Please add a subject.'
+    if (Object.keys(newErrors).length) { setErrors(newErrors); return }
 
-    const inputStyle = (name) => ({
-        width: '100%',
-        padding: '18px 0',
-        border: 'none',
-        borderBottom: `2px solid ${focused === name ? '#FFA837' : 'rgba(255,255,255,0.2)'}`,
-        background: 'transparent',
-        color: '#fff',
-        fontSize: '15px',
-        outline: 'none',
-        transition: 'border-color 0.3s ease',
-        boxSizing: 'border-box',
-    })
+    setBusy(true)
+    await new Promise((r) => setTimeout(r, 700))
+    setBusy(false)
+    setSubmitted(true)
+    setForm({ name: '', phone: '', email: '', interest: '', subject: '', message: '' })
+  }
 
-    return (
-        <div style={{ background: '#111', minHeight: '100vh', fontFamily: "'Inter', sans-serif" }}>
+  return (
+    <div className="contact-page">
+      <style>{`
+        .contact-page {
+          width: 100%;
+          background: #F0A940;
+          color: #1f1f1f;
+          overflow-x: hidden;
+          font-family: 'Segoe UI', system-ui, sans-serif;
+          min-height: 100vh;
+        }
 
-            {/* ── TOP HERO BANNER ── */}
-            <div style={{
-                background: 'linear-gradient(135deg, #1a1a1a 0%, #2a2a2a 100%)',
-                padding: '120px 60px 80px',
-                textAlign: 'center',
-                position: 'relative',
-                overflow: 'hidden',
-                borderBottom: '1px solid rgba(255,255,255,0.06)',
-            }}>
-                {/* Decorative blobs */}
-                <div style={{
-                    position: 'absolute', top: '-100px', left: '-100px',
-                    width: '400px', height: '400px', borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(255,168,55,0.12) 0%, transparent 70%)',
-                    pointerEvents: 'none',
-                }} />
-                <div style={{
-                    position: 'absolute', bottom: '-80px', right: '-80px',
-                    width: '350px', height: '350px', borderRadius: '50%',
-                    background: 'radial-gradient(circle, rgba(255,100,0,0.1) 0%, transparent 70%)',
-                    pointerEvents: 'none',
-                }} />
+        .contact-shell {
+          width: min(1200px, calc(100% - 48px));
+          margin: 0 auto;
+        }
 
-                <p style={{
-                    color: '#FFA837', fontSize: '13px', fontWeight: '700',
-                    letterSpacing: '4px', textTransform: 'uppercase', marginBottom: '20px',
-                }}>
-                    ✦ Let's Connect
-                </p>
-                <h1 style={{
-                    fontSize: 'clamp(3rem, 8vw, 6rem)', fontWeight: '800',
-                    color: '#fff', margin: '0 0 24px',
-                    lineHeight: '1.05', letterSpacing: '-2px',
-                }}>
-                    Get In <span style={{ color: '#FFA837' }}>Touch</span>
-                </h1>
-                <p style={{
-                    color: 'rgba(255,255,255,0.5)', fontSize: '18px',
-                    maxWidth: '500px', margin: '0 auto', lineHeight: '1.8',
-                }}>
-                    Have a question or want to collaborate? <br />
-                    We'd love to hear from you.
-                </p>
-            </div>
+        /* ── Breadcrumb ── */
+        .breadcrumb-bar {
+          padding: 18px 0;
+          border-bottom: 1px solid rgba(232, 125, 36, 0.12);
+        }
 
-            {/* ── SPLIT CONTENT ── */}
-            <div style={{
-                display: 'grid',
-                gridTemplateColumns: '1fr 1fr',
-                minHeight: '80vh',
-            }}>
+        .breadcrumb-bar a {
+          color: #9a8e88;
+          text-decoration: none;
+          font-size: 13px;
+          transition: color 0.2s;
+        }
 
-                {/* LEFT — Info Panel */}
-                <div style={{
-                    background: '#FFA837',
-                    padding: '80px 60px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'space-between',
-                    position: 'relative',
-                    overflow: 'hidden',
-                }}>
-                    {/* Big watermark text */}
-                    <div style={{
-                        position: 'absolute', bottom: '-20px', left: '-10px',
-                        fontSize: '180px', fontWeight: '900', color: 'rgba(0,0,0,0.06)',
-                        lineHeight: '1', pointerEvents: 'none', userSelect: 'none',
-                        letterSpacing: '-8px',
-                    }}>
-                        AIChE
-                    </div>
+        .breadcrumb-bar a:hover { color: #e87d24; }
 
-                    <div style={{ position: 'relative', zIndex: 1 }}>
-                        <p style={{
-                            fontSize: '12px', fontWeight: '700', letterSpacing: '4px',
-                            textTransform: 'uppercase', color: 'rgba(0,0,0,0.5)', marginBottom: '16px',
-                        }}>
-                            Contact Info
-                        </p>
-                        <h2 style={{
-                            fontSize: '2.8rem', fontWeight: '800', color: '#111',
-                            lineHeight: '1.1', marginBottom: '48px', letterSpacing: '-1px',
-                        }}>
-                            We're always<br />ready to help.
-                        </h2>
+        .breadcrumb-bar span {
+          color: #6a625d;
+          font-size: 13px;
+          font-weight: 600;
+        }
 
-                        {/* Info items */}
-                        {[
-                            { icon: <FaMapMarkerAlt />, label: 'Location', value: 'KFUPM, Dhahran, Saudi Arabia' },
-                            { icon: <FaPhoneAlt />, label: 'Phone', value: '+1 555-555-5556' },
-                            { icon: <FaEnvelope />, label: 'Email', value: 'aiche@kfupm.edu.sa' },
-                        ].map((item, i) => (
-                            <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '20px', marginBottom: '36px' }}>
-                                <div style={{
-                                    width: '48px', height: '48px', borderRadius: '50%',
-                                    background: 'rgba(0,0,0,0.1)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: '#111', fontSize: '18px', flexShrink: 0,
-                                }}>
-                                    {item.icon}
-                                </div>
-                                <div>
-                                    <div style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)', marginBottom: '4px' }}>
-                                        {item.label}
-                                    </div>
-                                    <div style={{ fontSize: '16px', fontWeight: '600', color: '#111' }}>
-                                        {item.value}
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
+        .breadcrumb-sep {
+          color: #c9bfb9;
+          margin: 0 8px;
+          font-size: 13px;
+        }
 
-                    {/* Social links */}
-                    <div style={{ position: 'relative', zIndex: 1 }}>
-                        <div style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: 'rgba(0,0,0,0.4)', marginBottom: '16px' }}>
-                            Follow Us
-                        </div>
-                        <div style={{ display: 'flex', gap: '14px' }}>
-                            {[FaInstagram, FaTwitter, FaLinkedin].map((Icon, i) => (
-                                <div key={i} style={{
-                                    width: '42px', height: '42px', borderRadius: '50%',
-                                    background: 'rgba(0,0,0,0.12)',
-                                    display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                    color: '#111', fontSize: '17px', cursor: 'pointer',
-                                    transition: 'background 0.2s',
-                                }}>
-                                    <Icon />
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
+        /* ── Page Hero ── */
+        .contact-hero {
+          padding: 80px 0 64px;
+          position: relative;
+        }
 
-                {/* RIGHT — Form Panel */}
-                <div style={{
-                    background: '#1a1a1a',
-                    padding: '80px 60px',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    justifyContent: 'center',
-                }}>
-                    <p style={{
-                        fontSize: '12px', fontWeight: '700', letterSpacing: '4px',
-                        textTransform: 'uppercase', color: '#FFA837', marginBottom: '16px',
-                    }}>
-                        Send a Message
-                    </p>
-                    <h2 style={{
-                        fontSize: '2.4rem', fontWeight: '800', color: '#fff',
-                        lineHeight: '1.1', marginBottom: '48px', letterSpacing: '-1px',
-                    }}>
-                        Let's start a<br />conversation.
-                    </h2>
+        .contact-hero::before {
+          content: '';
+          position: absolute;
+          top: -40px;
+          right: -60px;
+          width: 400px;
+          height: 400px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(232, 125, 36, 0.1) 0%, transparent 70%);
+          pointer-events: none;
+        }
 
-                    <form onSubmit={onSubmit}>
-                        {/* Two columns: name + phone */}
-                        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0 40px', marginBottom: '8px' }}>
-                            {[
-                                { id: 'name', label: 'Full Name *', type: 'text', placeholder: 'Your name' },
-                                { id: 'phone', label: 'Phone Number', type: 'tel', placeholder: '+966 5XXXXXXXX' },
-                            ].map(({ id, label, type, placeholder }) => (
-                                <div key={id}>
-                                    <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '4px' }}>
-                                        {label}
-                                    </label>
-                                    <input
-                                        id={id} name={id} type={type} placeholder={placeholder}
-                                        value={form[id]} onChange={onChange}
-                                        onFocus={() => setFocused(id)} onBlur={() => setFocused(null)}
-                                        style={inputStyle(id)}
-                                    />
-                                </div>
-                            ))}
-                        </div>
+        .eyebrow {
+          display: inline-flex;
+          align-items: center;
+          gap: 10px;
+          padding: 9px 18px;
+          border-radius: 999px;
+          background: rgba(232, 125, 36, 0.12);
+          color: #de7622;
+          font-size: 0.82rem;
+          letter-spacing: 0.12em;
+          font-weight: 800;
+          text-transform: uppercase;
+          margin-bottom: 18px;
+          border: 1px solid rgba(232, 125, 36, 0.14);
+        }
 
-                        {/* Email + Subject */}
-                        {[
-                            { id: 'email', label: 'Email Address *', type: 'email', placeholder: 'yourname@domain.com' },
-                            { id: 'subject', label: 'Subject *', type: 'text', placeholder: 'What is this about?' },
-                        ].map(({ id, label, type, placeholder }) => (
-                            <div key={id} style={{ marginBottom: '8px' }}>
-                                <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '4px' }}>
-                                    {label}
-                                </label>
-                                <input
-                                    id={id} name={id} type={type} placeholder={placeholder}
-                                    value={form[id]} onChange={onChange}
-                                    onFocus={() => setFocused(id)} onBlur={() => setFocused(null)}
-                                    style={inputStyle(id)}
-                                />
-                            </div>
-                        ))}
+        .contact-title {
+          font-size: clamp(2.4rem, 5vw, 3.6rem);
+          font-weight: 800;
+          line-height: 1.05;
+          letter-spacing: -0.04em;
+          color: #1f1f1f;
+          margin-bottom: 16px;
+          max-width: 640px;
+        }
 
-                        {/* Message */}
-                        <div style={{ marginBottom: '40px' }}>
-                            <label style={{ display: 'block', fontSize: '11px', fontWeight: '700', letterSpacing: '2px', textTransform: 'uppercase', color: 'rgba(255,255,255,0.35)', marginBottom: '4px' }}>
-                                Message
-                            </label>
-                            <textarea
-                                id="message" name="message" rows={4}
-                                placeholder="Write your message here..."
-                                value={form.message} onChange={onChange}
-                                onFocus={() => setFocused('message')} onBlur={() => setFocused(null)}
-                                style={{ ...inputStyle('message'), resize: 'none' }}
-                            />
-                        </div>
+        .contact-subtitle {
+          font-size: 1.05rem;
+          color: #6a625d;
+          line-height: 1.85;
+          max-width: 560px;
+        }
 
-                        {/* Submit button — Bili style */}
-                        <button
-                            type="submit"
-                            disabled={busy}
-                            style={{
-                                display: 'inline-flex', alignItems: 'center', gap: '14px',
-                                background: 'transparent',
-                                border: '2px solid #FFA837',
-                                color: '#FFA837',
-                                padding: '18px 40px',
-                                borderRadius: '50px',
-                                fontSize: '14px', fontWeight: '700',
-                                letterSpacing: '2px', textTransform: 'uppercase',
-                                cursor: busy ? 'not-allowed' : 'pointer',
-                                opacity: busy ? 0.7 : 1,
-                                transition: 'all 0.3s ease',
-                            }}
-                            onMouseEnter={(e) => {
-                                e.currentTarget.style.background = '#FFA837'
-                                e.currentTarget.style.color = '#111'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.currentTarget.style.background = 'transparent'
-                                e.currentTarget.style.color = '#FFA837'
-                            }}
-                        >
-                            {busy ? 'Sending…' : 'Send Message'}
-                            <span style={{
-                                width: '32px', height: '32px', borderRadius: '50%',
-                                background: '#FFA837', color: '#111',
-                                display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                fontSize: '16px', fontWeight: '900',
-                                transition: 'background 0.3s',
-                            }}>→</span>
-                        </button>
+        /* ── Main Grid ── */
+        .contact-grid {
+          display: grid;
+          grid-template-columns: 1fr 420px;
+          gap: 48px;
+          padding-bottom: 100px;
+          align-items: start;
+        }
 
-                        {status && (
-                            <div style={{
-                                marginTop: '20px', padding: '14px 18px', borderRadius: '10px',
-                                background: status.ok ? 'rgba(100,200,100,0.1)' : 'rgba(255,80,80,0.1)',
-                                border: `1px solid ${status.ok ? 'rgba(100,200,100,0.3)' : 'rgba(255,80,80,0.3)'}`,
-                                color: status.ok ? '#7ddf7d' : '#ff8080',
-                                fontSize: '14px',
-                            }}>
-                                {status.text}
-                            </div>
-                        )}
-                    </form>
-                </div>
-            </div>
+        /* ── Form Card ── */
+        .form-card {
+          background: linear-gradient(180deg, #ffffff 0%, #fff7ef 100%);
+          border: 1px solid rgba(232, 125, 36, 0.12);
+          border-radius: 32px;
+          padding: 48px;
+          box-shadow: 0 18px 50px rgba(232, 125, 36, 0.1), 0 2px 10px rgba(17, 17, 17, 0.04);
+          position: relative;
+          overflow: hidden;
+        }
 
-            {/* ── MAP STRIP ── */}
-            <div style={{ height: '320px', overflow: 'hidden', filter: 'grayscale(0.3) contrast(1.1)' }}>
-                <iframe
-                    title="KFUPM Map"
-                    src="https://www.google.com/maps?q=KFUPM&output=embed"
-                    width="100%" height="320"
-                    style={{ border: 0, display: 'block' }}
-                    loading="lazy"
-                    referrerPolicy="no-referrer-when-downgrade"
-                />
-            </div>
-        </div>
-    )
+        .form-card::before {
+          content: '';
+          position: absolute;
+          top: -60px;
+          right: -60px;
+          width: 200px;
+          height: 200px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(232, 125, 36, 0.1) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        .form-card::after {
+          content: '';
+          position: absolute;
+          bottom: -40px;
+          left: -40px;
+          width: 160px;
+          height: 160px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(255, 191, 140, 0.14) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        .form-card-title {
+          font-size: 1.4rem;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          color: #1f1f1f;
+          margin-bottom: 6px;
+        }
+
+        .form-card-sub {
+          font-size: 0.92rem;
+          color: #9a8e88;
+          margin-bottom: 36px;
+          line-height: 1.7;
+        }
+
+        /* ── Form Fields ── */
+        .form-row {
+          display: grid;
+          grid-template-columns: 1fr 1fr;
+          gap: 0 28px;
+        }
+
+        .field-group {
+          margin-bottom: 0;
+          position: relative;
+          z-index: 1;
+        }
+
+        .field-label {
+          display: block;
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #9a8e88;
+          margin-bottom: 8px;
+          margin-top: 26px;
+        }
+
+        .field-input,
+        .field-select,
+        .field-textarea {
+          width: 100%;
+          box-sizing: border-box;
+          background: rgba(255, 255, 255, 0.7);
+          border: 1.5px solid rgba(232, 125, 36, 0.18);
+          border-radius: 14px;
+          padding: 13px 16px;
+          font-family: inherit;
+          font-size: 14.5px;
+          color: #1f1f1f;
+          outline: none;
+          transition: border-color 0.2s, box-shadow 0.2s, background 0.2s;
+          backdrop-filter: blur(4px);
+        }
+
+        .field-input:focus,
+        .field-select:focus,
+        .field-textarea:focus {
+          border-color: #e87d24;
+          background: #ffffff;
+          box-shadow: 0 0 0 4px rgba(232, 125, 36, 0.1);
+        }
+
+        .field-input.has-error,
+        .field-select.has-error {
+          border-color: #e53935;
+          box-shadow: 0 0 0 4px rgba(229, 57, 53, 0.08);
+        }
+
+        .field-input::placeholder,
+        .field-textarea::placeholder {
+          color: #c4bab5;
+        }
+
+        .field-select {
+          appearance: none;
+          -webkit-appearance: none;
+          background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239a8e88' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+          background-repeat: no-repeat;
+          background-position: right 14px center;
+          cursor: pointer;
+        }
+
+        .field-textarea {
+          resize: none;
+          min-height: 120px;
+        }
+
+        .field-error {
+          font-size: 11.5px;
+          color: #e53935;
+          margin-top: 5px;
+          min-height: 16px;
+          font-weight: 500;
+        }
+
+        /* ── Submit Button ── */
+        .submit-btn {
+          margin-top: 32px;
+          width: 100%;
+          padding: 16px 24px;
+          background: linear-gradient(135deg, #ff9c52 0%, #e87d24 100%);
+          border: none;
+          color: white;
+          font-family: inherit;
+          font-size: 15px;
+          font-weight: 700;
+          border-radius: 14px;
+          cursor: pointer;
+          transition: transform 0.25s ease, box-shadow 0.25s ease, opacity 0.2s;
+          box-shadow: 0 14px 30px rgba(232, 125, 36, 0.35);
+          letter-spacing: 0.02em;
+          position: relative;
+          z-index: 1;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+          transform: translateY(-2px);
+          box-shadow: 0 18px 38px rgba(232, 125, 36, 0.42);
+        }
+
+        .submit-btn:disabled {
+          opacity: 0.7;
+          cursor: not-allowed;
+        }
+
+        .form-terms {
+          font-size: 12px;
+          color: #b0a8a3;
+          margin-top: 14px;
+          line-height: 1.6;
+          position: relative;
+          z-index: 1;
+        }
+
+        .form-terms a {
+          color: #b0a8a3;
+          text-decoration: underline;
+        }
+
+        /* ── Success Banner ── */
+        .success-banner {
+          margin-top: 28px;
+          padding: 22px 24px;
+          border-radius: 18px;
+          background: linear-gradient(135deg, #f0fdf7 0%, #ecfdf5 100%);
+          border: 1.5px solid #34d399;
+          display: flex;
+          align-items: flex-start;
+          gap: 14px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .success-icon {
+          width: 36px;
+          height: 36px;
+          border-radius: 50%;
+          background: #10b981;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-shrink: 0;
+        }
+
+        /* ── Right Column ── */
+        .right-col {
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
+        }
+
+        /* ── Info Card ── */
+        .info-card {
+          background: linear-gradient(180deg, #ffffff 0%, #fff7ef 100%);
+          border: 1px solid rgba(232, 125, 36, 0.12);
+          border-radius: 32px;
+          padding: 36px 32px;
+          box-shadow: 0 18px 50px rgba(232, 125, 36, 0.1), 0 2px 10px rgba(17, 17, 17, 0.04);
+          position: relative;
+          overflow: hidden;
+        }
+
+        .info-card::before {
+          content: '';
+          position: absolute;
+          top: -40px;
+          right: -40px;
+          width: 160px;
+          height: 160px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(232, 125, 36, 0.12) 0%, transparent 70%);
+          pointer-events: none;
+        }
+
+        .info-badge {
+          display: inline-flex;
+          align-items: center;
+          gap: 8px;
+          padding: 7px 14px;
+          border-radius: 999px;
+          background: rgba(232, 125, 36, 0.12);
+          color: #de7622;
+          font-size: 0.75rem;
+          letter-spacing: 0.12em;
+          font-weight: 800;
+          text-transform: uppercase;
+          margin-bottom: 16px;
+          border: 1px solid rgba(232, 125, 36, 0.14);
+        }
+
+        .info-card-title {
+          font-size: 1.25rem;
+          font-weight: 800;
+          letter-spacing: -0.03em;
+          color: #1f1f1f;
+          line-height: 1.3;
+          margin-bottom: 28px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .info-row {
+          padding: 14px 0;
+          border-bottom: 1px solid rgba(232, 125, 36, 0.1);
+          position: relative;
+          z-index: 1;
+        }
+
+        .info-row:last-of-type {
+          border-bottom: none;
+        }
+
+        .info-label {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #b0a8a3;
+          margin-bottom: 4px;
+        }
+
+        .info-value {
+          font-size: 14px;
+          color: #1f1f1f;
+          font-weight: 600;
+        }
+
+        .info-value a {
+          color: #1f1f1f;
+          text-decoration: none;
+          transition: color 0.2s;
+        }
+
+        .info-value a:hover {
+          color: #e87d24;
+        }
+
+        /* ── Socials ── */
+        .socials-label {
+          font-size: 11px;
+          font-weight: 700;
+          letter-spacing: 0.1em;
+          text-transform: uppercase;
+          color: #b0a8a3;
+          margin-top: 24px;
+          margin-bottom: 12px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .socials-row {
+          display: flex;
+          gap: 10px;
+          position: relative;
+          z-index: 1;
+        }
+
+        .social-btn {
+          width: 40px;
+          height: 40px;
+          border-radius: 14px;
+          border: 1.5px solid rgba(232, 125, 36, 0.16);
+          background: rgba(255, 255, 255, 0.8);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #9a8e88;
+          font-size: 16px;
+          text-decoration: none;
+          transition: all 0.2s ease;
+          box-shadow: 0 4px 10px rgba(232, 125, 36, 0.06);
+        }
+
+        .social-btn:hover {
+          border-color: #e87d24;
+          background: rgba(232, 125, 36, 0.1);
+          color: #e87d24;
+          transform: translateY(-2px);
+          box-shadow: 0 8px 18px rgba(232, 125, 36, 0.18);
+        }
+
+        /* ── Map Card ── */
+        .map-card {
+          border-radius: 28px;
+          overflow: hidden;
+          height: 240px;
+          border: 1px solid rgba(232, 125, 36, 0.1);
+          box-shadow: 0 14px 36px rgba(232, 125, 36, 0.1);
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 1024px) {
+          .contact-grid {
+            grid-template-columns: 1fr;
+            gap: 36px;
+          }
+
+          .right-col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+          }
+
+          .map-card {
+            grid-column: 1 / -1;
+          }
+
+          .quick-links-card {
+            grid-column: 1 / -1;
+          }
+        }
+
+        @media (max-width: 768px) {
+          .contact-hero {
+            padding: 60px 0 48px;
+          }
+
+          .form-card {
+            padding: 32px 24px;
+            border-radius: 24px;
+          }
+
+          .form-row {
+            grid-template-columns: 1fr;
+            gap: 0;
+          }
+
+          .right-col {
+            grid-template-columns: 1fr;
+          }
+
+          .map-card,
+          .quick-links-card {
+            grid-column: auto;
+          }
+        }
+      `}</style>
+
+      {/* Breadcrumb */}
+      <div className="breadcrumb-bar">
+        <div className="contact-shell">
+          <a href="/">AIChE KFUPM</a>
+          <span className="breadcrumb-sep">›</span>
+          <span>Contact Us</span>
+        </div>
+      </div>
+
+      {/* Hero */}
+      <div className="contact-hero">
+        <div className="contact-shell">
+          <div className="eyebrow">Get in Touch</div>
+          <h1 className="contact-title">We'd love to hear from you.</h1>
+          <p className="contact-subtitle">
+            Ask us anything — about upcoming events, membership, research collaboration, or sponsorship opportunities. We're always happy to connect.
+          </p>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="contact-shell">
+        <div className="contact-grid">
+
+          {/* ── Left: Form ── */}
+          <div className="form-card">
+            <h2 className="form-card-title">Send us a message</h2>
+            <p className="form-card-sub">Fill in the details below and we'll respond as soon as possible.</p>
+
+            <form onSubmit={onSubmit} noValidate>
+
+              <div className="form-row">
+                <div className="field-group">
+                  <label className="field-label">Your Name *</label>
+                  <input
+                    name="name" type="text" placeholder="Full name"
+                    value={form.name} onChange={onChange}
+                    className={`field-input${errors.name ? ' has-error' : ''}`}
+                  />
+                  <div className="field-error">{errors.name}</div>
+                </div>
+                <div className="field-group">
+                  <label className="field-label">Phone Number</label>
+                  <input
+                    name="phone" type="tel" placeholder="+966 5XXXXXXXX"
+                    value={form.phone} onChange={onChange}
+                    className={`field-input${errors.phone ? ' has-error' : ''}`}
+                  />
+                  <div className="field-error">{errors.phone}</div>
+                </div>
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Email Address *</label>
+                <input
+                  name="email" type="email" placeholder="you@example.com"
+                  value={form.email} onChange={onChange}
+                  className={`field-input${errors.email ? ' has-error' : ''}`}
+                />
+                <div className="field-error">{errors.email}</div>
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Interested In</label>
+                <select
+                  name="interest"
+                  value={form.interest} onChange={onChange}
+                  className="field-select"
+                  style={{ color: form.interest ? '#1f1f1f' : '#c4bab5' }}
+                >
+                  <option value="" disabled>Select a topic…</option>
+                  <option value="Membership">Membership</option>
+                  <option value="Events">Events &amp; Workshops</option>
+                  <option value="Research">Research Collaboration</option>
+                  <option value="Sponsorship">Sponsorship</option>
+                  <option value="General">General Inquiry</option>
+                </select>
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">Subject *</label>
+                <input
+                  name="subject" type="text" placeholder="What is this about?"
+                  value={form.subject} onChange={onChange}
+                  className={`field-input${errors.subject ? ' has-error' : ''}`}
+                />
+                <div className="field-error">{errors.subject}</div>
+              </div>
+
+              <div className="field-group">
+                <label className="field-label">How Can We Help?</label>
+                <textarea
+                  name="message" rows={4} placeholder="Write your message here…"
+                  value={form.message} onChange={onChange}
+                  className="field-textarea"
+                />
+              </div>
+
+              {!submitted && (
+                <button type="submit" disabled={busy} className="submit-btn">
+                  {busy ? 'Sending…' : 'Send Your Message →'}
+                </button>
+              )}
+
+              <p className="form-terms">
+                By clicking, you agree to our{' '}
+                <a href="#">Terms &amp; Conditions</a> and <a href="#">Privacy Policy</a>.
+              </p>
+
+              {submitted && (
+                <div className="success-banner">
+                  <div className="success-icon">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none"
+                      stroke="#fff" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                  </div>
+                  <div>
+                    <h4 style={{ fontSize: '15px', fontWeight: 700, color: '#065f46', marginBottom: '4px' }}>
+                      Message sent!
+                    </h4>
+                    <p style={{ fontSize: '13px', color: '#059669', lineHeight: 1.5, margin: 0 }}>
+                      Thanks for reaching out. We'll get back to you as soon as possible.
+                    </p>
+                  </div>
+                </div>
+              )}
+            </form>
+          </div>
+
+          {/* ── Right Column ── */}
+          <div className="right-col">
+
+            {/* Info Card */}
+            <div className="info-card">
+              <div className="info-badge">Saudi Arabia</div>
+              <h3 className="info-card-title">
+                Get in touch with<br />AIChE KFUPM
+              </h3>
+
+              <div className="info-row">
+                <div className="info-label">Address</div>
+                <div className="info-value">KFUPM, Dhahran 31261, Saudi Arabia</div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">Email Address</div>
+                <div className="info-value">
+                  <a href="mailto:aiche@kfupm.edu.sa">aiche@kfupm.edu.sa</a>
+                </div>
+              </div>
+              <div className="info-row">
+                <div className="info-label">Phone</div>
+                <div className="info-value">
+                  <a href="tel:+966538220595">+966 53 822 0595</a>
+                </div>
+              </div>
+
+              <div className="socials-label">Follow Us</div>
+              <div className="socials-row">
+                {[
+                  { Icon: FaInstagram, label: 'Instagram', href: 'https://www.instagram.com/kfupm_aiche/' },
+                  { Icon: FaXTwitter, label: 'X / Twitter', href: 'https://x.com/KFUPMAIChE?lang=ar' },
+                  { Icon: FaLinkedin, label: 'LinkedIn', href: 'https://www.linkedin.com/company/kfupm-aiche/?originalSubdomain=sa' },
+                ].map(({ Icon, label, href }) => (
+                  <a key={label} href={href} title={label} className="social-btn">
+                    <Icon />
+                  </a>
+                ))}
+              </div>
+            </div>
+
+            {/* Map */}
+            <div className="map-card">
+              <iframe
+                title="KFUPM Map"
+                src="https://www.google.com/maps?q=KFUPM,Dhahran,SaudiArabia&output=embed"
+                width="100%" height="240"
+                style={{ border: 0, display: 'block' }}
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </div>
+  )
 }
