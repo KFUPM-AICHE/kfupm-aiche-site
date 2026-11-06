@@ -174,7 +174,7 @@ const PyramidBlock = React.memo(({ s }) => {
    MAIN COMPONENT
 ───────────────────────────────────────────── */
 export default function About() {
-  const [activeCommittee, setActiveCommittee] = useState('Events');
+  const [activeCommittee, setActiveCommittee] = useState('Marketing');
   const [alchemyAnim, setAlchemyAnim] = useState(null);
 
   useEffect(() => {
@@ -201,42 +201,50 @@ export default function About() {
     { number: 1.7,  suffix: 'M+', label: 'Total Impressions', decimal: true },
   ];
 
+  /* ── 2026–2027 structure ──────────────────────────
+     img: '' → shows the member's initials until a photo is added
+     to /public. Set name to 'TBA' for unfilled positions. */
   const committees = {
-    Events: [
-      { name: 'Ghada Alghamdi',    role: 'Committee Head',           img: '/Ghada Alghamdi.jpg' },
-      { name: 'Faisal Alasmari',   role: 'Industrial Visits Leader', img: '/Male Charecter.jpg' },
-      { name: 'Sajidah Alhayez',   role: 'Activities Leader',        img: '/Female Charecter.jpg' },
-      { name: 'Fatemah Alramadan', role: 'Seminars Coordinator',     img: '/Female Charecter.jpg' },
-    ],
     Marketing: [
-      { name: 'Laila Maeshi',       role: 'Committee Head',          img: '/Female Charecter.jpg' },
-      { name: 'Mohammed Algadheeb', role: 'Committee Vice Head',     img: '/Mohammed Al-Gadheeb.jpg' },
-      { name: 'Ridha Alhussain',    role: 'Social Media Leader',     img: '/Male Charecter.jpg' },
-      { name: 'Zainab Alkhater',    role: 'Photographers Leader',    img: '/Female Charecter.jpg' },
-      { name: 'Rama Almaqbool',     role: 'Designers Leader',        img: '/Female Charecter.jpg' },
-      { name: 'Saba Aljohani',      role: 'Web Developers Leader',   img: '/Female Charecter.jpg' },
+      { name: 'Alaa Alsadiq',          role: 'Committee Head',          img: '/alaa.jpeg' },
+      { name: 'Mohammed Al-Gadheeb',   role: 'Marketing Deputy',        img: '/Mohammed Al-Gadheeb.jpg' },
+      { name: 'Fatimah Al-Hammadah',   role: 'Social Media',            img: '' },
+      { name: 'Zainab Al-Khater',      role: 'Photography',             img: '' },
+      { name: 'Joury AlKhatam',        role: 'Design',                  img: '' },
+      { name: 'Hala Alsgoor',          role: 'Web & Newsletter',        img: '' },
     ],
-    Outreach: [
-      { name: 'Fatimah Almahfoudh', role: 'Committee Head',             img: '/Female Charecter.jpg' },
-      { name: 'Zainab Aldukhi',     role: 'ESC & Partnerships Leader',  img: '/Female Charecter.jpg' },
+    'Finance & Sponsorship': [
+      { name: 'Jana Almasrahi',        role: 'Sponsorship Specialist',  img: '' },
+      { name: 'Saud Alotaibi',         role: 'Sponsorship Specialist',  img: '' },
+      { name: 'Fatimah Albahrani',     role: 'Sponsorship Specialist',  img: '' },
+      { name: 'Reema Aldakheeli',      role: 'Financial Officer',       img: '' },
+      { name: 'Asma Alqahtani',        role: 'Financial Officer',       img: '' },
+      { name: 'Faisal Almutairi',      role: 'Financial Officer',       img: '' },
     ],
-    Conferences: [
-      { name: 'Alqasem Sodagar', role: 'Committee Head',      img: '/AlqasemSodagar.jpg' },
-      { name: 'Ali Alyami',      role: 'Committee Vice Head', img: '/Ali Alyami.jpg' },
+    'Public Relations': [
+      { name: 'Naif Alshamrani',       role: 'Committee Head',          img: '' },
+      { name: 'Meshari Alalawi',       role: 'Public Relations Deputy', img: '' },
     ],
-    Officers: [
-      { name: 'Meshal Alrefaei',  role: 'Sponsorship Specialist', img: '/Meshal Alrefaei.PNG' },
-      { name: 'Reema Aldakheeli', role: 'Financial Officer',       img: '/Female Charecter.jpg' },
-      { name: 'Hatim Almuatairi', role: 'Secretary',               img: '/Male Charecter.jpg' },
+    'Competitions & Conferences': [
+      { name: 'Zainab Al-Mutawa',      role: 'Committee Head',          img: '' },
+      { name: 'Fatimah Alsaleem',      role: 'Competitions & Conferences Deputy', img: '' },
+      { name: 'Fahad Alajmi',          role: 'Conferences & Delegations', img: '' },
+      { name: 'Layan Mukhliss',        role: 'Research',                img: '' },
+      { name: 'Zoha Ahmad',            role: 'Competitions',            img: '' },
+    ],
+    'Industry & Events': [
+      { name: 'Juri Almasad',          role: 'Committee Head',          img: '' },
+      { name: 'TBA',                   role: 'Industry & Programs Deputy', img: '' },
+      { name: 'Mohammad Al Sharif',    role: 'Industrial Visits',       img: '' },
+      { name: 'Bandar Alharbi',        role: 'Career & Academic',       img: '' },
+      { name: 'Joud Alsubhi',          role: 'Student Activities',      img: '' },
+      { name: 'Ahmed Almutairi',       role: 'Logistics',               img: '' },
     ],
     Consultants: [
-      { name: 'Mohammed Almahasnah', role: 'Consultant', img: '/Mohammed Almahasnah.jpg' },
-      { name: 'Abdullah Alomar',     role: 'Consultant', img: '/Male Charecter.jpg' },
-      { name: 'Asseel Alzahrani',    role: 'Consultant', img: '/AsseelPic.jpg' },
-    ],
-    'Executive Officers': [
-      { name: 'Reem Almomen', role: 'Executive Officer', img: '/Female Charecter.jpg' },
-      { name: 'Anas Hakami',  role: 'Executive Officer', img: '/Male Charecter.jpg' },
+      { name: 'Mohammed Almahasnah',   role: 'Consultant',              img: '/Mohammed Almahasnah.jpg' },
+      { name: 'Aseel Al-Zahrani',      role: 'Consultant',              img: '/AsseelPic.jpg' },
+      { name: 'Abdullah Alomar',       role: 'Consultant',              img: '' },
+      { name: 'Fatimah Almakinah',     role: 'Consultant',              img: '/Fatimah Almakinah .jpg' },
     ],
   };
 
@@ -589,9 +597,10 @@ export default function About() {
               <div style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, rgba(73,73,73,0.3), transparent)' }} />
             </div>
             <div style={styles.row}>
-              <Leader name="Dr. Basim Abussaud" role="Advisor"        img="/Bassim.JPG"             size={170} isAdvisor />
-              <Leader name="Fatimah Almakinah"  role="President"      img="/Fatimah Almakinah .jpg" />
-              <Leader name="Lama Alharbi"        role="Vice President" img="/Lama Alharbi.png" />
+              <Leader name="Dr. Basim Abussaud" role="Advisor"            img="/Bassim.JPG" size={170} isAdvisor />
+              <Leader name="Faisal Alasmari"    role="President"          img="" />
+              <Leader name="Abdullah Alghamdi"  role="Vice President"     img="" />
+              <Leader name="Wajdan Alhassan"    role="ESC Representative" img="" />
             </div>
           </Reveal>
 
@@ -712,7 +721,7 @@ const Leader = ({ name, role, img, size = 160, isAdvisor = false }) => (
           ★ Faculty Advisor
         </div>
       )}
-      <Avatar size={size} img={img} />
+      <Avatar size={size} img={img} name={name} />
     </div>
     <div style={styles.name}>{name}</div>
     <div className="leaderRoleBadge">{role}</div>
@@ -724,7 +733,7 @@ const Leader = ({ name, role, img, size = 160, isAdvisor = false }) => (
 ───────────────────────────────────────────── */
 const Member = ({ name, role, img }) => (
   <HoverCard>
-    <Avatar size={120} img={img} />
+    <Avatar size={120} img={img} name={name} />
     <div style={styles.name}>{name}</div>
     <div style={styles.role}>{role}</div>
   </HoverCard>
@@ -733,9 +742,31 @@ const Member = ({ name, role, img }) => (
 /* ─────────────────────────────────────────────
    AVATAR
 ───────────────────────────────────────────── */
-const Avatar = ({ size, img }) => (
+const initials = (name = '') =>
+  name === 'TBA'
+    ? '?'
+    : (() => {
+        const words = name.replace(/^Dr\.\s*/, '').split(/\s+/).filter(Boolean);
+        const first = words[0] || '';
+        const last  = words.length > 1 ? words[words.length - 1] : '';
+        // "Al-Khater" / "Alsadiq" → K / S
+        const lastInitial = last.replace(/^Al-?(?=[A-Z])/i, '')[0] || '';
+        return (first[0] + lastInitial).toUpperCase();
+      })();
+
+const Avatar = ({ size, img, name }) => (
   <div style={{ ...styles.avatar, width: size, height: size }}>
-    <img src={img} alt="" style={styles.avatarImg} />
+    {img ? (
+      <img src={encodeURI(img)} alt={name} loading="lazy" style={styles.avatarImg} />
+    ) : (
+      <div
+        role="img"
+        aria-label={name}
+        style={{ ...styles.avatarInitials, fontSize: size * 0.32 }}
+      >
+        {initials(name)}
+      </div>
+    )}
   </div>
 );
 
@@ -913,6 +944,13 @@ const styles = {
     boxShadow: '0 0 0 4px rgba(255,135,55,0.15)',
   },
   avatarImg: { width: '100%', height: '100%', objectFit: 'cover' },
+  avatarInitials: {
+    width: '100%', height: '100%',
+    display: 'flex', alignItems: 'center', justifyContent: 'center',
+    background: 'linear-gradient(160deg, #FFA837 0%, #FF8737 100%)',
+    color: '#494949', fontWeight: 800, letterSpacing: '0.02em',
+    fontFamily: "'Sora', sans-serif",
+  },
 
   buttonRow: { display: 'flex', justifyContent: 'center', gap: '12px', flexWrap: 'wrap' },
   button: {

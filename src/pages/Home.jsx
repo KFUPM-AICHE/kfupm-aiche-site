@@ -7,7 +7,7 @@ const heroSlides = [
     tag: "Welcome to KFUPM AIChE",
     title: "Where student ideas become real impact.",
     description:
-      "Our chapter connects ambitious chemical engineering students with meaningful events, industry exposure, and creative teamwork. Every initiative is designed to turn curiosity into experience and experience into confidence.",
+      "Since 2013, the AIChE Student Chapter at KFUPM has connected chemical engineering students with industry, alumni, and academia through hands-on experiences, professional development, and real industry exposure.",
   },
   {
     image: "/from_campus_to_career.JPG",
@@ -32,10 +32,10 @@ const heroSlides = [
   },
   {
     image: "/teachers_day_booth.jpg",
-    tag: "Creative Experiences",
-    title: "Thoughtful events with modern execution.",
+    tag: "Campus Engagement",
+    title: "Celebrating the people who shape us.",
     description:
-      "We focus on details that make every activation feel polished, welcoming, and worth attending. The result is a modern chapter identity that reflects excellence in both content and presentation.",
+      "From Teachers' Day to national occasions, we bring the department together to recognize the faculty and students who make our community what it is.",
   },
 ];
 
@@ -885,12 +885,12 @@ function Home() {
             <div>
               <div className="eyebrow">Our Achievements</div>
               <h2 className="section-title">
-                Achievements that feel brighter, cleaner, and more alive.
+                Our impact in numbers.
               </h2>
               <p className="section-subtitle">
-                This section now uses a warm orange-and-white identity with softer
-                cards, better spacing, and subtle motion to make the metrics feel
-                more premium without affecting the beauty of the hero slider.
+                A snapshot of the 2024–2025 academic year: the students we
+                reached, the companies we worked with, and the sessions we
+                delivered.
               </p>
             </div>
 
@@ -923,11 +923,11 @@ function Home() {
         <div className="home-shell">
           <div className="eyebrow">Latest Events</div>
           <h2 className="section-title">
-            The latest experiences shaping our chapter culture.
+            What we've been up to.
           </h2>
           <p className="section-subtitle">
-            A clean three-card layout keeps the newest activities visible while
-            giving the page more rhythm and visual variety.
+            Recent highlights from the chapter, from career sessions to campus
+            celebrations and student activities.
           </p>
 
           <div className="events-grid">
@@ -949,11 +949,11 @@ function Home() {
         <div className="home-shell">
           <div className="eyebrow">Member of the Month</div>
           <h2 className="section-title">
-            Celebrating the people behind the chapter momentum.
+            Recognizing the members who move the chapter forward.
           </h2>
           <p className="section-subtitle">
-            A featured spotlight adds a personal touch to the homepage and makes
-            the chapter feel more human and alive.
+            Each month, we highlight a member whose dedication and initiative
+            made a real difference to the chapter.
           </p>
 
           <div className="member-card">
@@ -1006,11 +1006,11 @@ function Home() {
         <div className="home-shell">
           <div className="eyebrow">Success Partners</div>
           <h2 className="section-title">
-            Powered by the relationships that help us grow.
+            Our success partners.
           </h2>
           <p className="section-subtitle">
-            This final section closes the homepage with a premium,
-            partnership-focused feel while staying aligned with the project theme.
+            We are grateful to the organizations whose support makes our events,
+            competitions, and industry programs possible.
           </p>
 
           <div className="partners-grid">

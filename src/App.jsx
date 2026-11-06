@@ -1,5 +1,7 @@
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
+import { FaInstagram, FaLinkedin } from "react-icons/fa";
+import { FaXTwitter } from "react-icons/fa6";
 import Home from "./pages/Home.jsx";
 import About from "./pages/About.jsx";
 import Contact from "./pages/Contact.jsx";
@@ -8,6 +10,13 @@ import Gallery from "./pages/Gallery.jsx";
 import Newsletter from "./pages/Newsletter.jsx";
 
 const logo = "/logo.png";
+
+// Official chapter accounts (same as the Contact page)
+const socialLinks = [
+  { Icon: FaInstagram, label: "Instagram", href: "https://www.instagram.com/kfupm_aiche/" },
+  { Icon: FaXTwitter,  label: "X",         href: "https://x.com/KFUPMAIChE" },
+  { Icon: FaLinkedin,  label: "LinkedIn",  href: "https://www.linkedin.com/company/kfupm-aiche/" },
+];
 
 const navLinks = [
   { to: "/",           label: "Home" },
@@ -252,9 +261,18 @@ function App() {
           <div>
             <h4 style={{ marginBottom: "15px", color: "#fff" }}>Follow us</h4>
             <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              <a href="#" style={{ color: "#ccc", textDecoration: "none", fontSize: "14px" }}>Facebook</a>
-              <a href="#" style={{ color: "#ccc", textDecoration: "none", fontSize: "14px" }}>Twitter</a>
-              <a href="#" style={{ color: "#ccc", textDecoration: "none", fontSize: "14px" }}>Instagram</a>
+              {socialLinks.map(({ Icon, label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  style={{ color: "#ccc", textDecoration: "none", fontSize: "14px", display: "inline-flex", alignItems: "center", gap: "8px" }}
+                >
+                  <Icon aria-hidden="true" size={16} />
+                  {label}
+                </a>
+              ))}
             </div>
           </div>
         </div>
@@ -265,7 +283,7 @@ function App() {
           fontSize: "14px",
           color: "#999",
         }}>
-          <p>© 2025 AIChE KFUPM. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} AIChE KFUPM. All rights reserved.</p>
         </div>
       </footer>
     </Router>
