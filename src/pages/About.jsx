@@ -207,11 +207,11 @@ export default function About() {
   const committees = {
     Marketing: [
       { name: 'Alaa Alsadiq',          role: 'Committee Head',          img: '/alaa.jpeg' },
-      { name: 'Mohammed Al-Gadheeb',   role: 'Marketing Deputy',        img: '/Mohammed Al-Gadheeb.jpg' },
-      { name: 'Fatimah Al-Hammadah',   role: 'Social Media',            img: '' },
-      { name: 'Zainab Al-Khater',      role: 'Photography',             img: '' },
-      { name: 'Joury AlKhatam',        role: 'Design',                  img: '' },
-      { name: 'Hala Alsgoor',          role: 'Web & Newsletter',        img: '' },
+      { name: 'Mohammed Al-Gadheeb',   role: 'Marketing Deputy Leader',        img: '/Mohammed Al-Gadheeb.jpg' },
+      { name: 'Fatimah Al-Hammadah',   role: 'Social Media Leader',            img: '' },
+      { name: 'Zainab Al-Khater',      role: 'Photography Leader',             img: '' },
+      { name: 'Joury AlKhatam',        role: 'Design Leader',                  img: '' },
+      { name: 'Hala Alsgoor',          role: 'Web & Newsletter Leader',        img: '' },
     ],
     'Finance & Sponsorship': [
       { name: 'Jana Almasrahi',        role: 'Sponsorship Specialist',  img: '' },
@@ -226,19 +226,19 @@ export default function About() {
       { name: 'Meshari Alalawi',       role: 'Public Relations Deputy', img: '' },
     ],
     'Competitions & Conferences': [
-      { name: 'Zainab Al-Mutawa',      role: 'Committee Head',          img: '' },
+      { name: 'Zainab Al-Mutawa',      role: 'Committee Head',          img: '/zainab_almutawa.jpg' },
       { name: 'Fatimah Alsaleem',      role: 'Competitions & Conferences Deputy', img: '' },
-      { name: 'Fahad Alajmi',          role: 'Conferences & Delegations', img: '' },
-      { name: 'Layan Mukhliss',        role: 'Research',                img: '' },
-      { name: 'Zoha Ahmad',            role: 'Competitions',            img: '' },
+      { name: 'Fahad Alajmi',          role: 'Conferences & Delegations Leader', img: '' },
+      { name: 'Layan Mukhliss',        role: 'Research Leader',                img: '' },
+      { name: 'Zoha Ahmad',            role: 'Competitions Leader',            img: '' },
     ],
     'Industry & Events': [
       { name: 'Juri Almasad',          role: 'Committee Head',          img: '' },
       { name: 'TBA',                   role: 'Industry & Programs Deputy', img: '' },
-      { name: 'Mohammad Al Sharif',    role: 'Industrial Visits',       img: '' },
-      { name: 'Bandar Alharbi',        role: 'Career & Academic',       img: '' },
-      { name: 'Joud Alsubhi',          role: 'Student Activities',      img: '' },
-      { name: 'Ahmed Almutairi',       role: 'Logistics',               img: '' },
+      { name: 'Mohammad Al Sharif',    role: 'Industrial Visits Leader',       img: '' },
+      { name: 'Bandar Alharbi',        role: 'Career & Academic Leader',       img: '' },
+      { name: 'Joud Alsubhi',          role: 'Student Activities Leader',      img: '' },
+      { name: 'Ahmed Almutairi',       role: 'Logistics Leader',               img: '' },
     ],
     Consultants: [
       { name: 'Mohammed Almahasnah',   role: 'Consultant',              img: '/Mohammed Almahasnah.jpg' },
@@ -255,10 +255,10 @@ export default function About() {
   ];
 
   const values = [
-    { icon: '⚡', label: 'Excellence' },
-    { icon: '💡', label: 'Innovation' },
-    { icon: '🤝', label: 'Collaboration' },
-    { icon: '📈', label: 'Professional Dev' },
+    { icon: '', label: 'Excellence' },
+    { icon: '', label: 'Innovation' },
+    { icon: '', label: 'Collaboration' },
+    { icon: '', label: 'Professional Dev' },
   ];
 
   return (
@@ -599,7 +599,7 @@ export default function About() {
             <div style={styles.row}>
               <Leader name="Dr. Basim Abussaud" role="Advisor"            img="/Bassim.JPG" size={170} isAdvisor />
               <Leader name="Faisal Alasmari"    role="President"          img="" />
-              <Leader name="Abdullah Alghamdi"  role="Vice President"     img="" />
+              <Leader name="Abdullah Alghamdi"  role="Vice President"     img="abdullah_alghamdi.jpg" />
               <Leader name="Wajdan Alhassan"    role="ESC Representative" img="" />
             </div>
           </Reveal>
