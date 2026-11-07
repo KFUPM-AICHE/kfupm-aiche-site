@@ -207,7 +207,7 @@ export default function About() {
   const committees = {
     Marketing: [
       { name: 'Alaa Alsadiq',          role: 'Committee Head',          img: '/alaa.jpeg' },
-      { name: 'Mohammed Al-Gadheeb',   role: 'Marketing Deputy Leader',        img: '/Mohammed Al-Gadheeb.jpg' },
+      { name: 'Mohammed Al-Gadheeb',   role: 'Marketing Deputy ',        img: '/Mohammed Al-Gadheeb.jpg' },
       { name: 'Fatimah Al-Hammadah',   role: 'Social Media Leader',            img: '' },
       { name: 'Zainab Al-Khater',      role: 'Photography Leader',             img: '' },
       { name: 'Joury AlKhatam',        role: 'Design Leader',                  img: '' },
