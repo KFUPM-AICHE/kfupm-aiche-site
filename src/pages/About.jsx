@@ -412,6 +412,14 @@ export default function About() {
             flex-wrap: wrap !important;
           }
         }
+        /* Keep the vision graphic's glow inside the screen */
+        @media (max-width: 767px) {
+          .animCloud { left: 0 !important; right: 0 !important; }
+        }
+        /* The row is stacked here, so the graphic no longer overlaps the text column */
+        @media (max-width: 650px) {
+          .visionAnim { margin-left: 0 !important; }
+        }
       `}</style>
 
       <div className="noiseOverlay" />
@@ -541,9 +549,9 @@ export default function About() {
                 </div>
               </div>
 
-              <div style={styles.visionAnim}>
+              <div className="visionAnim" style={styles.visionAnim}>
                 <div style={styles.animWrap}>
-                  <div style={styles.animCloud} />
+                  <div className="animCloud" style={styles.animCloud} />
                   <div style={styles.animLottie}>
                     {alchemyAnim && <Lottie animationData={alchemyAnim} loop />}
                   </div>
@@ -863,7 +871,7 @@ const styles = {
 
   achievementsSection: { backgroundColor: 'transparent', padding: '90px 40px' },
   achievementsTitle: {
-    fontSize: '2.6rem', color: '#494949', textAlign: 'center',
+    fontSize: 'min(2.6rem, 8.5vw)', color: '#494949', textAlign: 'center',
     fontFamily: "'Sora', sans-serif", fontWeight: 800, letterSpacing: '-0.02em',
   },
   achievementsSubTitle: {

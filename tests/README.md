@@ -37,7 +37,7 @@ BASE_URL="https://your-site.vercel.app" npm test
 |---|---|
 | `direct-links.spec.js` | Every page opens from a link and survives a refresh; static files still load |
 | `navigation.spec.js` | Top menu, mobile menu, logo, footer, browser back and forward |
-| `responsive.spec.js` | No page scrolls sideways at 320, 375, 390, 768 or 1440 px |
+| `responsive.spec.js` | No page scrolls sideways at 320, 375, 390, 768 or 1440 px; logo and menu button stay on screen |
 | `newsletter.spec.js` | Filters and cards fit small screens; cards turn over; keyboard and screen reader behavior |
 | `contact.spec.js` | Email Us works; no form pretends to send a message; other contact details remain |
 
@@ -48,8 +48,6 @@ The tests use Chromium only. They do not replace trying the site on real phones,
 - **You changed something on purpose,** such as a page heading: update the test to match. Headings and page names are in `support/site.js`.
 - **You did not mean to change it:** the test found a real problem. Fix the site, not the test.
 - **To see what happened:** run `npm run test:report` and open the failed test. It includes a step-by-step recording.
-
-Tests marked as skipped are known problems. `KNOWN_OVERFLOW` in `responsive.spec.js` lists them with reasons. Remove a line once its page is fixed.
 
 ## Why the tests use their own server
 
