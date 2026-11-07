@@ -151,39 +151,46 @@ function Newsletter() {
             backgroundColor: "#FFA837",
             color: "#fff",
             minHeight: "100vh",
-            padding: "80px 20px",
+            padding: "clamp(40px, 10vw, 80px) clamp(12px, 4vw, 20px)",
+        },
+        // Holds the card grids, the yearbook and their shared side padding.
+        sectionWrap: {
+            padding: "0 clamp(4px, 3vw, 30px)",
         },
         monthTitle: {
-            fontSize: "5rem",
+            fontSize: "clamp(2rem, 9vw, 5rem)",
             fontWeight: "700",
             marginBottom: "40px",
             marginTop: "60px",
             color: "#fff",
-            textAlign: "left",
+            textAlign: "start",
+            overflowWrap: "break-word",
             borderBottom: "3px solid #e87d24",
-            paddingBottom: "50px",
+            paddingBottom: "clamp(20px, 6vw, 50px)",
             maxWidth: "1200px",
             margin: "60px 0 40px 0",
-            paddingLeft: "0px",
+            paddingInlineStart: "0px",
         },
         newslettersGrid: {
             display: "grid",
             gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))",
-            gap: "60px",
-            marginBottom: "100px",
+            gap: "clamp(28px, 7vw, 60px)",
+            marginBottom: "clamp(60px, 12vw, 100px)",
         },
+        // Cards grow with their front face, so nothing on the front is cut off.
         newsletterCard: {
+            display: "flex",
             backgroundColor: "transparent",
             borderRadius: "15px",
             overflow: "visible",
             cursor: "pointer",
             perspective: "1000px",
-            height: "550px",
+            minHeight: "550px",
         },
         cardInner: {
             position: "relative",
+            display: "flex",
             width: "100%",
-            height: "100%",
             transition: "transform 0.6s",
             transformStyle: "preserve-3d",
         },
@@ -191,9 +198,7 @@ function Newsletter() {
             transform: "rotateY(180deg)",
         },
         cardFace: {
-            position: "absolute",
             width: "100%",
-            height: "100%",
             backfaceVisibility: "hidden",
             backgroundColor: "#1a1a1a",
             borderRadius: "15px",
@@ -202,8 +207,11 @@ function Newsletter() {
             overflow: "hidden",
         },
         cardBack: {
+            position: "absolute",
+            inset: 0,
+            height: "100%",
             transform: "rotateY(180deg)",
-            padding: "30px",
+            padding: "clamp(16px, 5vw, 30px)",
             display: "flex",
             flexDirection: "column",
             justifyContent: "space-between",
@@ -232,7 +240,7 @@ function Newsletter() {
             pointerEvents: "none",
         },
         newsletterContent: {
-            padding: "20px 30px 30px",
+            padding: "20px clamp(16px, 5vw, 30px) 30px",
         },
         newsletterDate: {
             color: "#e87d24",
@@ -241,10 +249,11 @@ function Newsletter() {
             marginBottom: "10px",
         },
         newsletterTitle: {
-            fontSize: "1.8rem",
+            fontSize: "clamp(1.4rem, 6vw, 1.8rem)",
             fontWeight: "700",
             marginBottom: "15px",
             lineHeight: "1.3",
+            overflowWrap: "break-word",
         },
         newsletterDescription: {
             fontSize: "1rem",
@@ -292,7 +301,7 @@ function Newsletter() {
         yearbookContainer: {
             maxWidth: "1400px",
             margin: "0 auto",
-            padding: "0 20px",
+            padding: "0 clamp(0px, 3vw, 20px)",
             backgroundColor: "#1a1a1a",
             borderRadius: "15px",
             overflow: "hidden",
@@ -300,7 +309,7 @@ function Newsletter() {
         },
         yearbookIframe: {
             width: "100%",
-            height: "800px",
+            height: "clamp(480px, 110vw, 800px)",
             border: "none",
             display: "block",
         },
@@ -320,8 +329,8 @@ function Newsletter() {
             {/* Hero Section */}
             <div style={{
                 maxWidth: "100%",
-                margin: "0 0 80px 0",
-                padding: "80px 40px",
+                margin: "0 0 clamp(40px, 10vw, 80px) 0",
+                padding: "clamp(48px, 10vw, 80px) clamp(16px, 5vw, 40px)",
                 background: "linear-gradient(135deg, #e87d24 0%, #ff6b00 40%, #cc5500 100%)",
                 borderRadius: "24px",
                 position: "relative",
@@ -368,7 +377,7 @@ function Newsletter() {
                     </div>
 
                     <h1 style={{
-                        fontSize: "4rem",
+                        fontSize: "clamp(2.5rem, 13vw, 4rem)",
                         fontWeight: "800",
                         marginBottom: "20px",
                         color: "#fff",
@@ -404,7 +413,9 @@ function Newsletter() {
                                 onChange={(e) => setSearchSemester(e.target.value)}
                                 style={{
                                     appearance: "none",
-                                    padding: "16px 50px 16px 24px",
+                                    paddingBlock: "16px",
+                                    paddingInlineStart: "24px",
+                                    paddingInlineEnd: "50px",
                                     fontSize: "1rem",
                                     fontWeight: "600",
                                     border: "2px solid rgba(255,255,255,0.4)",
@@ -433,7 +444,7 @@ function Newsletter() {
                                 <option value="Fall" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Last Year</option>
                             </select>
                             <div style={{
-                                position: "absolute", right: "18px", top: "50%",
+                                position: "absolute", insetInlineEnd: "18px", top: "50%",
                                 transform: "translateY(-50%)",
                                 pointerEvents: "none",
                                 color: "#fff", fontSize: "0.8rem",
@@ -444,7 +455,7 @@ function Newsletter() {
                     <div style={{
                         display: "flex",
                         justifyContent: "center",
-                        gap: "48px",
+                        gap: "clamp(20px, 7vw, 48px)",
                         marginTop: "52px",
                         flexWrap: "wrap",
                     }}>
@@ -477,7 +488,7 @@ function Newsletter() {
                     flexDirection: "column",
                     alignItems: "center",
                     justifyContent: "center",
-                    padding: "100px 20px",
+                    padding: "clamp(60px, 14vw, 100px) 20px",
                     textAlign: "center",
                 }}>
                     <div style={{
@@ -487,7 +498,7 @@ function Newsletter() {
                         animation: "float 3s ease-in-out infinite",
                     }}>⏳</div>
                     <h2 style={{
-                        fontSize: "3.5rem",
+                        fontSize: "clamp(2.25rem, 11vw, 3.5rem)",
                         fontWeight: "800",
                         color: "#1a1a1a",
                         marginBottom: "16px",
@@ -511,8 +522,8 @@ function Newsletter() {
 
             {/* Last Year — Yearbook */}
             {searchSemester === "Fall" && (
-                <div style={{ padding: "0 30px" }}>
-                    <h2 style={{ ...styles.monthTitle, fontSize: "3rem" }}>Year Booklet</h2>
+                <div style={styles.sectionWrap}>
+                    <h2 style={{ ...styles.monthTitle, fontSize: "clamp(2rem, 9vw, 3rem)" }}>Year Booklet</h2>
                     <div style={styles.yearbookContainer}>
                         <iframe
                             src="https://online.fliphtml5.com/kslxc/zrfq/"
@@ -526,7 +537,7 @@ function Newsletter() {
 
             {/* Newsletter cards */}
             {searchSemester !== "Fall" && searchSemester !== "Summer" && (
-                <div style={{ maxWidth: "100%", margin: "0", padding: "0 30px" }}>
+                <div style={{ ...styles.sectionWrap, maxWidth: "100%", margin: "0" }}>
                     {filteredMonths.map((monthData, monthIndex) => (
                         <div key={monthIndex}>
                             <h2 style={styles.monthTitle}>{monthData.month}</h2>
