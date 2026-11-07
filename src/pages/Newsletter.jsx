@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 function Newsletter() {
     const [searchSemester, setSearchSemester] = useState("");
@@ -130,8 +130,23 @@ function Newsletter() {
         },
     ];
 
-    const handleCardFlip = (monthIndex, cardIndex) => {
+    // The hidden side of a card is inert, so focus moves to the side now showing.
+    const pendingFocus = useRef(null);
+
+    useEffect(() => {
+        if (!pendingFocus.current) return;
+        const { target, preventScroll } = pendingFocus.current;
+        pendingFocus.current = null;
+        document.querySelector(`[data-flip-focus="${target}"]`)?.focus({ preventScroll });
+    }, [flippedCards]);
+
+    const handleCardFlip = (monthIndex, cardIndex, event) => {
         const key = `${monthIndex}-${cardIndex}`;
+        pendingFocus.current = {
+            target: `${key}-${flippedCards[key] ? "front" : "back"}`,
+            // event.detail is 0 for keyboard clicks. Mouse and touch keep their scroll position.
+            preventScroll: event.detail > 0,
+        };
         setFlippedCards(prev => ({
             ...prev,
             [key]: !prev[key]
@@ -554,6 +569,7 @@ function Newsletter() {
                                                 {/* Front of Card */}
                                                 <div
                                                     style={styles.cardFace}
+                                                    inert={isFlipped}
                                                     onMouseEnter={(e) => {
                                                         if (!isFlipped) {
                                                             e.currentTarget.style.transform = "translateY(-10px)";
@@ -584,7 +600,8 @@ function Newsletter() {
                                                         <h3 style={styles.newsletterTitle}>{newsletter.title}</h3>
                                                         <p style={styles.newsletterDescription}>{newsletter.description}</p>
                                                         <button
-                                                            onClick={() => handleCardFlip(monthIndex, index)}
+                                                            data-flip-focus={`${cardKey}-front`}
+                                                            onClick={(e) => handleCardFlip(monthIndex, index, e)}
                                                             style={styles.readMoreBtn}
                                                             onMouseEnter={(e) => { e.target.style.gap = "12px"; }}
                                                             onMouseLeave={(e) => { e.target.style.gap = "8px"; }}
@@ -595,14 +612,15 @@ function Newsletter() {
                                                 </div>
 
                                                 {/* Back of Card */}
-                                                <div style={{ ...styles.cardFace, ...styles.cardBack }}>
+                                                <div style={{ ...styles.cardFace, ...styles.cardBack }} inert={!isFlipped}>
                                                     <div style={styles.backContent}>
                                                         <div style={styles.newsletterDate}>{newsletter.date}</div>
                                                         <h3 style={styles.newsletterTitle}>{newsletter.title}</h3>
                                                         <p style={styles.backText}>{newsletter.fullText}</p>
                                                     </div>
                                                     <button
-                                                        onClick={() => handleCardFlip(monthIndex, index)}
+                                                        data-flip-focus={`${cardKey}-back`}
+                                                        onClick={(e) => handleCardFlip(monthIndex, index, e)}
                                                         style={styles.flipBackBtn}
                                                         onMouseEnter={(e) => {
                                                             e.target.style.transform = "translateY(-2px)";
