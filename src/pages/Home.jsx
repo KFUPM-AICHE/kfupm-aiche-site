@@ -588,110 +588,6 @@ function Home() {
           line-height: 1.8;
         }
 
-        .member-card {
-          display: grid;
-          grid-template-columns: 0.95fr 1.05fr;
-          gap: 30px;
-          align-items: center;
-          margin-top: 36px;
-          padding: 28px;
-          border-radius: 32px;
-          background: linear-gradient(135deg, #ffffff 0%, #fff7ef 100%);
-          box-shadow: 0 24px 60px rgba(232, 125, 36, 0.12);
-          border: 1px solid rgba(232, 125, 36, 0.08);
-        }
-
-        .member-photo-wrap {
-          position: relative;
-          border-radius: 28px;
-          overflow: hidden;
-          min-height: 420px;
-          background: #1d1d1d;
-        }
-
-        .member-photo-wrap::after {
-          content: "";
-          position: absolute;
-          inset: 0;
-          background: linear-gradient(180deg, rgba(0, 0, 0, 0.02) 0%, rgba(0, 0, 0, 0.28) 100%);
-        }
-
-        .member-photo {
-          width: 100%;
-          height: 100%;
-          min-height: 420px;
-          object-fit: cover;
-        }
-
-        .member-copy {
-          padding: 6px 8px 6px 4px;
-        }
-
-        .member-kicker {
-          display: inline-flex;
-          padding: 8px 14px;
-          border-radius: 999px;
-          background: rgba(232, 125, 36, 0.12);
-          color: #e87d24;
-          font-size: 0.78rem;
-          font-weight: 700;
-          letter-spacing: 0.1em;
-          text-transform: uppercase;
-          margin-bottom: 18px;
-        }
-
-        .member-copy h3 {
-          font-size: clamp(2rem, 4vw, 3rem);
-          line-height: 1;
-          letter-spacing: -0.05em;
-          color: #1f1f1f;
-          margin-bottom: 10px;
-        }
-
-        .member-role {
-          display: block;
-          color: #e87d24;
-          font-weight: 700;
-          margin-bottom: 18px;
-          font-size: 1rem;
-          letter-spacing: 0.02em;
-        }
-
-        .member-copy p {
-          color: #6e655f;
-          line-height: 1.9;
-          margin-bottom: 24px;
-        }
-
-        .member-points {
-          display: grid;
-          gap: 12px;
-        }
-
-        .member-point {
-          display: flex;
-          align-items: center;
-          gap: 12px;
-          padding: 14px 16px;
-          border-radius: 18px;
-          background: white;
-          border: 1px solid rgba(232, 125, 36, 0.08);
-          box-shadow: 0 10px 24px rgba(232, 125, 36, 0.05);
-        }
-
-        .member-point span:first-child {
-          width: 30px;
-          height: 30px;
-          border-radius: 50%;
-          background: rgba(232, 125, 36, 0.14);
-          color: #e87d24;
-          display: inline-flex;
-          align-items: center;
-          justify-content: center;
-          font-weight: 700;
-          flex-shrink: 0;
-        }
-
         .partners-section {
           background: linear-gradient(180deg, #fff7ef 0%, #ffffff 100%);
         }
@@ -750,7 +646,6 @@ function Home() {
 
         @media (max-width: 1024px) {
           .achievements-head,
-          .member-card,
           .achievements-grid,
           .events-grid,
           .partners-grid {
@@ -797,15 +692,9 @@ function Home() {
             flex-direction: column;
           }
 
-          .member-photo-wrap,
-          .member-photo {
-            min-height: 320px;
-          }
-
           .achievement-card,
           .event-card,
-          .partner-card,
-          .member-card {
+          .partner-card {
             border-radius: 24px;
           }
         }
@@ -941,63 +830,6 @@ function Home() {
                 </div>
               </article>
             ))}
-          </div>
-        </div>
-      </section>
-
-      <section className="section">
-        <div className="home-shell">
-          <div className="eyebrow">Member of the Month</div>
-          <h2 className="section-title">
-            Recognizing the members who move the chapter forward.
-          </h2>
-          <p className="section-subtitle">
-            Each month, we highlight a member whose dedication and initiative
-            made a real difference to the chapter.
-          </p>
-
-          <div className="member-card">
-            <div className="member-photo-wrap">
-              <img
-                src="/Ghada Alghamdi.jpg"
-                alt="Ghada Alghamdi"
-                className="member-photo"
-              />
-            </div>
-
-            <div className="member-copy">
-              <div className="member-kicker">Featured Member</div>
-              <h3>Ghada Alghamdi</h3>
-              <span className="member-role">Events Committee Head</span>
-              <p>
-                Ghada is recognized for her consistency, attention to detail, and
-                the energy she brings to chapter execution. Her leadership helps
-                transform ideas into well-organized experiences that members
-                genuinely remember.
-              </p>
-
-              <div className="member-points">
-                <div className="member-point">
-                  <span>01</span>
-                  <span>
-                    Leads with structure while keeping every event student-centered.
-                  </span>
-                </div>
-                <div className="member-point">
-                  <span>02</span>
-                  <span>
-                    Balances creativity and planning to keep the chapter experience
-                    polished.
-                  </span>
-                </div>
-                <div className="member-point">
-                  <span>03</span>
-                  <span>
-                    Represents the spirit of collaboration that defines KFUPM AIChE.
-                  </span>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </section>
