@@ -6,6 +6,47 @@ function Newsletter() {
 
     const monthsData = [
         {
+            month: "KFUPM AIChE – October 2026 Highlights",
+            semester: "October 2026",
+            newsletters: [
+                {
+                    date: "October 8",
+                    title: "Beyond Horizons",
+                    description: "In collaboration with the Aerospace Engineering Club, KFUPM AIChE hosted Beyond Horizons, an engaging event that explored the world of space through interactive experiments and highlighted how Chemical Engineering extends far beyond Earth.",
+                    fullText: "In collaboration with the Aerospace Engineering Club, KFUPM AIChE hosted Beyond Horizons, an engaging event that explored the world of space through interactive experiments and highlighted how Chemical Engineering extends far beyond Earth.\n\nOver 100 visitors engaged with our booth throughout the event.",
+                    image: "",
+                },
+                {
+                    date: "October 18",
+                    title: "KFUPM AIChE Opening Ceremony",
+                    description: "KFUPM AIChE officially welcomed its new members for the 2026–2027 academic year through an opening ceremony filled with interactive activities, inspiring remarks, and opportunities for members to connect and engage.",
+                    fullText: "KFUPM AIChE officially welcomed its new members for the 2026–2027 academic year through an opening ceremony filled with interactive activities, inspiring remarks, and opportunities for members to connect and engage.",
+                    image: "",
+                },
+                {
+                    date: "",
+                    title: "Global Sustainability Challenge 2026–2027",
+                    description: "The KFUPM AIChE Competition Team invited students from all KFUPM majors to participate in the Global Sustainability Challenge, featuring two tracks:",
+                    fullText: "The KFUPM AIChE Competition Team invited students from all KFUPM majors to participate in the Global Sustainability Challenge, featuring two tracks:\n\n• Sustainable Energy\n• Adaptation & Resilience\n\nWith a prize pool exceeding 35,000 SAR, the competition offers students an opportunity to develop innovative solutions to global sustainability challenges, with the global finals scheduled for May 2027.",
+                    image: "global_sustainability_challenge.png",
+                },
+                {
+                    date: "",
+                    title: "CHEMATHON 2026",
+                    description: "KFUPM AIChE initiated efforts to support students interested in participating in CHEMATHON 2026, offering guidance and exploring the possibility of organizing a research poster workshop.",
+                    fullText: "KFUPM AIChE initiated efforts to support students interested in participating in CHEMATHON 2026, offering guidance and exploring the possibility of organizing a research poster workshop.\n\nAn interest form was launched to identify potential participants and provide them with the necessary guidance and support throughout their preparation.",
+                    image: "chemathon.png",
+                },
+                {
+                    date: "",
+                    title: "Aspen HYSYS & Plus Exam Registration & Online Sessions",
+                    description: "KFUPM AIChE opened registration for the Aspen HYSYS and Aspen Plus Certification Exams (Aspen ACADEMIC and USER), providing junior-level students and above with an opportunity to demonstrate their proficiency in two widely used process simulation tools.",
+                    fullText: "KFUPM AIChE opened registration for the Aspen HYSYS and Aspen Plus Certification Exams (Aspen ACADEMIC and USER), providing junior-level students and above with an opportunity to demonstrate their proficiency in two widely used process simulation tools.\n\nTo support students in their preparation, two online sessions were successfully conducted on October 29 and November 5, 2026, led by KFUPM AIChE Senior Consultant Eng. Mohammed Almahasnah.\n\nThe sessions covered essential concepts and exam-related topics, attracting over 70 student attendees.",
+                    image: "aspen_registration.png",
+                },
+            ]
+        },
+        {
             month: "Social Events",
             semester: "Spring",
             newsletters: [
@@ -300,6 +341,8 @@ function Newsletter() {
             color: "#ccc",
             lineHeight: "1.8",
             marginBottom: "20px",
+            // Keeps paragraph breaks and bullet lists written into an article's text.
+            whiteSpace: "pre-line",
         },
         flipBackBtn: {
             backgroundColor: "#e87d24",
@@ -454,6 +497,7 @@ function Newsletter() {
                                 }}
                             >
                                 <option value="" style={{ backgroundColor: "#e87d24", color: "#fff" }}>All Semesters</option>
+                                <option value="October 2026" style={{ backgroundColor: "#e87d24", color: "#fff" }}>October 2026</option>
                                 <option value="Spring" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Term 251</option>
                                 <option value="Summer" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Term 252</option>
                                 <option value="Fall" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Last Year</option>
@@ -587,11 +631,13 @@ function Newsletter() {
                                                 >
                                                     {/* Image with fade-into-black gradient at bottom */}
                                                     <div style={styles.imageWrapper}>
-                                                        <img
-                                                            src={newsletter.image}
-                                                            alt={newsletter.title}
-                                                            style={styles.newsletterImage}
-                                                        />
+                                                        {newsletter.image && (
+                                                            <img
+                                                                src={newsletter.image}
+                                                                alt={newsletter.title}
+                                                                style={styles.newsletterImage}
+                                                            />
+                                                        )}
                                                         <div style={styles.imageFade} />
                                                     </div>
 
