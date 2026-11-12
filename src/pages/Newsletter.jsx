@@ -29,6 +29,8 @@ function Newsletter() {
                     description: "The KFUPM AIChE Competition Team invited students from all KFUPM majors to participate in the Global Sustainability Challenge, featuring two tracks:",
                     fullText: "The KFUPM AIChE Competition Team invited students from all KFUPM majors to participate in the Global Sustainability Challenge, featuring two tracks:\n\n• Sustainable Energy\n• Adaptation & Resilience\n\nWith a prize pool exceeding 35,000 SAR, the competition offers students an opportunity to develop innovative solutions to global sustainability challenges, with the global finals scheduled for May 2027.",
                     image: "global_sustainability_challenge.png",
+                    // Posters are shown whole, not cropped.
+                    imageFit: "contain",
                 },
                 {
                     date: "",
@@ -36,6 +38,8 @@ function Newsletter() {
                     description: "KFUPM AIChE initiated efforts to support students interested in participating in CHEMATHON 2026, offering guidance and exploring the possibility of organizing a research poster workshop.",
                     fullText: "KFUPM AIChE initiated efforts to support students interested in participating in CHEMATHON 2026, offering guidance and exploring the possibility of organizing a research poster workshop.\n\nAn interest form was launched to identify potential participants and provide them with the necessary guidance and support throughout their preparation.",
                     image: "chemathon.png",
+                    // Posters are shown whole, not cropped.
+                    imageFit: "contain",
                 },
                 {
                     date: "",
@@ -43,6 +47,8 @@ function Newsletter() {
                     description: "KFUPM AIChE opened registration for the Aspen HYSYS and Aspen Plus Certification Exams (Aspen ACADEMIC and USER), providing junior-level students and above with an opportunity to demonstrate their proficiency in two widely used process simulation tools.",
                     fullText: "KFUPM AIChE opened registration for the Aspen HYSYS and Aspen Plus Certification Exams (Aspen ACADEMIC and USER), providing junior-level students and above with an opportunity to demonstrate their proficiency in two widely used process simulation tools.\n\nTo support students in their preparation, two online sessions were successfully conducted on October 29 and November 5, 2026, led by KFUPM AIChE Senior Consultant Eng. Mohammed Almahasnah.\n\nThe sessions covered essential concepts and exam-related topics, attracting over 70 student attendees.",
                     image: "aspen_registration.png",
+                    // Posters are shown whole, not cropped.
+                    imageFit: "contain",
                 },
             ]
         },
@@ -635,10 +641,14 @@ function Newsletter() {
                                                             <img
                                                                 src={newsletter.image}
                                                                 alt={newsletter.title}
-                                                                style={styles.newsletterImage}
+                                                                style={{
+                                                                    ...styles.newsletterImage,
+                                                                    ...(newsletter.imageFit && { objectFit: newsletter.imageFit }),
+                                                                }}
                                                             />
                                                         )}
-                                                        <div style={styles.imageFade} />
+                                                        {/* A whole poster keeps its bottom edge visible, so it gets no fade. */}
+                                                        {!newsletter.imageFit && <div style={styles.imageFade} />}
                                                     </div>
 
                                                     <div style={styles.newsletterContent}>
