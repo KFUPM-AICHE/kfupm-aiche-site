@@ -14,14 +14,14 @@ function Newsletter() {
                     title: "Beyond Horizons",
                     description: "In collaboration with the Aerospace Engineering Club, KFUPM AIChE hosted Beyond Horizons, an engaging event that explored the world of space through interactive experiments and highlighted how Chemical Engineering extends far beyond Earth.",
                     fullText: "In collaboration with the Aerospace Engineering Club, KFUPM AIChE hosted Beyond Horizons, an engaging event that explored the world of space through interactive experiments and highlighted how Chemical Engineering extends far beyond Earth.\n\nOver 100 visitors engaged with our booth throughout the event.",
-                    image: "",
+                    image: "beyond_horizons.png",
                 },
                 {
                     date: "October 18",
                     title: "KFUPM AIChE Opening Ceremony",
                     description: "KFUPM AIChE officially welcomed its new members for the 2026–2027 academic year through an opening ceremony filled with interactive activities, inspiring remarks, and opportunities for members to connect and engage.",
                     fullText: "KFUPM AIChE officially welcomed its new members for the 2026–2027 academic year through an opening ceremony filled with interactive activities, inspiring remarks, and opportunities for members to connect and engage.",
-                    image: "",
+                    image: "opening_ceremony.png",
                 },
                 {
                     date: "",
