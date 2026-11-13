@@ -1,8 +1,24 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
+import "./Newsletter.css";
+
+// The newest issue, shown first. Earlier issues sit in the archive with their existing labels.
+const LATEST = "October 2026";
+const ARCHIVE = [
+    { id: "Spring", label: "Term 251" },
+    { id: "Summer", label: "Term 252" },
+    { id: "Fall", label: "Last Year" },
+];
+const STATS = [
+    { number: "15+", label: "Events" },
+    { number: "3", label: "Semesters" },
+    { number: "100+", label: "Members" },
+];
+const YEARBOOK_URL = "https://online.fliphtml5.com/kslxc/zrfq/";
+const articleCount = (n) => (n === 1 ? "1 article" : `${n} articles`);
 
 function Newsletter() {
-    const [searchSemester, setSearchSemester] = useState("");
-    const [flippedCards, setFlippedCards] = useState({});
+    const [archiveTab, setArchiveTab] = useState("Spring");
+    const [reader, setReader] = useState(null);
 
     const monthsData = [
         {
@@ -177,530 +193,214 @@ function Newsletter() {
         },
     ];
 
-    // The hidden side of a card is inert, so focus moves to the side now showing.
-    const pendingFocus = useRef(null);
-
-    useEffect(() => {
-        if (!pendingFocus.current) return;
-        const { target, preventScroll } = pendingFocus.current;
-        pendingFocus.current = null;
-        document.querySelector(`[data-flip-focus="${target}"]`)?.focus({ preventScroll });
-    }, [flippedCards]);
-
-    const handleCardFlip = (monthIndex, cardIndex, event) => {
-        const key = `${monthIndex}-${cardIndex}`;
-        pendingFocus.current = {
-            target: `${key}-${flippedCards[key] ? "front" : "back"}`,
-            // event.detail is 0 for keyboard clicks. Mouse and touch keep their scroll position.
-            preventScroll: event.detail > 0,
-        };
-        setFlippedCards(prev => ({
-            ...prev,
-            [key]: !prev[key]
-        }));
-    };
-
-    const filteredMonths = searchSemester && searchSemester !== "Fall" && searchSemester !== "Summer"
-        ? monthsData.filter(month =>
-            month.semester.toLowerCase() === searchSemester.toLowerCase()
-        )
-        : (searchSemester === "Fall" || searchSemester === "Summer")
-            ? []
-            : monthsData;
-
-    const styles = {
-        container: {
-            backgroundColor: "#FFA837",
-            color: "#fff",
-            minHeight: "100vh",
-            padding: "clamp(40px, 10vw, 80px) clamp(12px, 4vw, 20px)",
-        },
-        // Holds the card grids, the yearbook and their shared side padding.
-        sectionWrap: {
-            padding: "0 clamp(4px, 3vw, 30px)",
-        },
-        monthTitle: {
-            fontSize: "clamp(2rem, 9vw, 5rem)",
-            fontWeight: "700",
-            marginBottom: "40px",
-            marginTop: "60px",
-            color: "#fff",
-            textAlign: "start",
-            overflowWrap: "break-word",
-            borderBottom: "3px solid #e87d24",
-            paddingBottom: "clamp(20px, 6vw, 50px)",
-            maxWidth: "1200px",
-            margin: "60px 0 40px 0",
-            paddingInlineStart: "0px",
-        },
-        newslettersGrid: {
-            display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(min(380px, 100%), 1fr))",
-            gap: "clamp(28px, 7vw, 60px)",
-            marginBottom: "clamp(60px, 12vw, 100px)",
-        },
-        // Cards grow with their front face, so nothing on the front is cut off.
-        newsletterCard: {
-            display: "flex",
-            backgroundColor: "transparent",
-            borderRadius: "15px",
-            overflow: "visible",
-            cursor: "pointer",
-            perspective: "1000px",
-            minHeight: "550px",
-        },
-        cardInner: {
-            position: "relative",
-            display: "flex",
-            width: "100%",
-            transition: "transform 0.6s",
-            transformStyle: "preserve-3d",
-        },
-        cardInnerFlipped: {
-            transform: "rotateY(180deg)",
-        },
-        cardFace: {
-            width: "100%",
-            backfaceVisibility: "hidden",
-            backgroundColor: "#1a1a1a",
-            borderRadius: "15px",
-            border: "2px solid #2a2a2a",
-            transition: "all 0.3s ease",
-            overflow: "hidden",
-        },
-        cardBack: {
-            position: "absolute",
-            inset: 0,
-            height: "100%",
-            transform: "rotateY(180deg)",
-            padding: "clamp(16px, 5vw, 30px)",
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "space-between",
-        },
-        // Image wrapper with fade effect at bottom
-        imageWrapper: {
-            position: "relative",
-            width: "100%",
-            height: "250px",
-            flexShrink: 0,
-        },
-        newsletterImage: {
-            width: "100%",
-            height: "250px",
-            objectFit: "cover",
-            display: "block",
-        },
-        // Gradient overlay that fades image bottom into card background
-        imageFade: {
-            position: "absolute",
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: "80px",
-            background: "linear-gradient(to bottom, transparent 0%, #1a1a1a 100%)",
-            pointerEvents: "none",
-        },
-        newsletterContent: {
-            padding: "20px clamp(16px, 5vw, 30px) 30px",
-        },
-        newsletterDate: {
-            color: "#e87d24",
-            fontSize: "0.95rem",
-            fontWeight: "600",
-            marginBottom: "10px",
-        },
-        newsletterTitle: {
-            fontSize: "clamp(1.4rem, 6vw, 1.8rem)",
-            fontWeight: "700",
-            marginBottom: "15px",
-            lineHeight: "1.3",
-            overflowWrap: "break-word",
-        },
-        newsletterDescription: {
-            fontSize: "1rem",
-            color: "#ccc",
-            lineHeight: "1.7",
-            marginBottom: "20px",
-        },
-        readMoreBtn: {
-            color: "#e87d24",
-            fontSize: "1rem",
-            fontWeight: "600",
-            textDecoration: "none",
-            display: "inline-flex",
-            alignItems: "center",
-            gap: "8px",
-            transition: "gap 0.3s ease",
-            cursor: "pointer",
-            backgroundColor: "transparent",
-            border: "none",
-            padding: "0",
-        },
-        backContent: {
-            flex: 1,
-            overflowY: "auto",
-            marginBottom: "20px",
-        },
-        backText: {
-            fontSize: "1rem",
-            color: "#ccc",
-            lineHeight: "1.8",
-            marginBottom: "20px",
-            // Keeps paragraph breaks and bullet lists written into an article's text.
-            whiteSpace: "pre-line",
-        },
-        flipBackBtn: {
-            backgroundColor: "#e87d24",
-            color: "#000",
-            padding: "12px 30px",
-            fontSize: "1rem",
-            fontWeight: "600",
-            border: "none",
-            borderRadius: "8px",
-            cursor: "pointer",
-            transition: "all 0.3s ease",
-            width: "100%",
-        },
-        yearbookContainer: {
-            maxWidth: "1400px",
-            margin: "0 auto",
-            padding: "0 clamp(0px, 3vw, 20px)",
-            backgroundColor: "#1a1a1a",
-            borderRadius: "15px",
-            overflow: "hidden",
-            boxShadow: "0 10px 40px rgba(0, 0, 0, 0.5)",
-        },
-        yearbookIframe: {
-            width: "100%",
-            height: "clamp(480px, 110vw, 800px)",
-            border: "none",
-            display: "block",
-        },
-    };
-
-    const floatKeyframes = `
-      @keyframes float {
-        0%, 100% { transform: translateY(0px); }
-        50% { transform: translateY(-12px); }
-      }
-    `;
+    const latest = monthsData.filter((group) => group.semester === LATEST);
+    const archiveGroups = monthsData.filter((group) => group.semester === archiveTab);
+    const openReader = (articles, index, opener) => setReader({ articles, index, opener });
 
     return (
-        <>
-        <style>{floatKeyframes}</style>
-        <div style={styles.container}>
-            {/* Hero Section */}
-            <div style={{
-                maxWidth: "100%",
-                margin: "0 0 clamp(40px, 10vw, 80px) 0",
-                padding: "clamp(48px, 10vw, 80px) clamp(16px, 5vw, 40px)",
-                background: "linear-gradient(135deg, #e87d24 0%, #ff6b00 40%, #cc5500 100%)",
-                borderRadius: "24px",
-                position: "relative",
-                overflow: "hidden",
-            }}>
-                <div style={{
-                    position: "absolute", top: "-60px", right: "-60px",
-                    width: "300px", height: "300px",
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.08)",
-                    pointerEvents: "none",
-                }} />
-                <div style={{
-                    position: "absolute", bottom: "-80px", left: "-40px",
-                    width: "250px", height: "250px",
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.06)",
-                    pointerEvents: "none",
-                }} />
-                <div style={{
-                    position: "absolute", top: "30px", left: "200px",
-                    width: "120px", height: "120px",
-                    borderRadius: "50%",
-                    background: "rgba(255,255,255,0.05)",
-                    pointerEvents: "none",
-                }} />
-
-                <div style={{ position: "relative", zIndex: 1, textAlign: "center" }}>
-                    <div style={{
-                        display: "inline-block",
-                        backgroundColor: "rgba(255,255,255,0.15)",
-                        backdropFilter: "blur(10px)",
-                        border: "1px solid rgba(255,255,255,0.3)",
-                        borderRadius: "50px",
-                        padding: "8px 22px",
-                        fontSize: "0.85rem",
-                        fontWeight: "600",
-                        letterSpacing: "1.5px",
-                        textTransform: "uppercase",
-                        color: "#fff",
-                        marginBottom: "28px",
-                    }}>
-                        ✦ AIChE KFUPM Chapter
+        <div className="nl-page">
+            <div className="nl-shell">
+                <header className="nl-hero">
+                    <div>
+                        <p className="nl-hero__badge">✦ AIChE KFUPM Chapter</p>
+                        <h1 className="nl-hero__title">Newsletter</h1>
+                        <p className="nl-hero__lead">
+                            Stay updated with our latest news, events, and exclusive insights
+                            from the world of chemical engineering.
+                        </p>
                     </div>
+                    <dl className="nl-stats">
+                        {STATS.map((stat) => (
+                            <div key={stat.label}>
+                                <dt>{stat.label}</dt>
+                                <dd>{stat.number}</dd>
+                            </div>
+                        ))}
+                    </dl>
+                </header>
 
-                    <h1 style={{
-                        fontSize: "clamp(2.5rem, 13vw, 4rem)",
-                        fontWeight: "800",
-                        marginBottom: "20px",
-                        color: "#fff",
-                        letterSpacing: "-1px",
-                        lineHeight: "1.1",
-                        textShadow: "0 2px 20px rgba(0,0,0,0.15)",
-                    }}>
-                        Newsletter
-                    </h1>
+                {latest.map((group) => (
+                    <section key={group.month} className="nl-section" aria-labelledby="nl-latest-title">
+                        <div className="nl-section__head">
+                            <div>
+                                <p className="nl-section__label">Latest issue</p>
+                                <h2 id="nl-latest-title" className="nl-section__title">{group.month}</h2>
+                            </div>
+                            <p className="nl-section__meta">{articleCount(group.newsletters.length)}</p>
+                        </div>
+                        <ArticleGrid articles={group.newsletters} headingLevel={3} onRead={openReader} />
+                    </section>
+                ))}
 
-                    <p style={{
-                        fontSize: "1.15rem",
-                        color: "rgba(255,255,255,0.85)",
-                        maxWidth: "600px",
-                        margin: "0 auto 48px",
-                        lineHeight: "1.8",
-                        fontWeight: "400",
-                    }}>
-                        Stay updated with our latest news, events, and exclusive insights
-                        from the world of chemical engineering.
-                    </p>
-
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        gap: "16px",
-                        flexWrap: "wrap",
-                    }}>
-                        <div style={{ position: "relative" }}>
-                            <select
-                                value={searchSemester}
-                                onChange={(e) => setSearchSemester(e.target.value)}
-                                style={{
-                                    appearance: "none",
-                                    paddingBlock: "16px",
-                                    paddingInlineStart: "24px",
-                                    paddingInlineEnd: "50px",
-                                    fontSize: "1rem",
-                                    fontWeight: "600",
-                                    border: "2px solid rgba(255,255,255,0.4)",
-                                    borderRadius: "50px",
-                                    backgroundColor: "rgba(255,255,255,0.12)",
-                                    backdropFilter: "blur(10px)",
-                                    color: "#fff",
-                                    outline: "none",
-                                    cursor: "pointer",
-                                    minWidth: "220px",
-                                    transition: "all 0.3s ease",
-                                    boxShadow: "0 4px 20px rgba(0,0,0,0.15)",
-                                }}
-                                onFocus={(e) => {
-                                    e.target.style.backgroundColor = "rgba(255,255,255,0.22)";
-                                    e.target.style.borderColor = "rgba(255,255,255,0.8)";
-                                }}
-                                onBlur={(e) => {
-                                    e.target.style.backgroundColor = "rgba(255,255,255,0.12)";
-                                    e.target.style.borderColor = "rgba(255,255,255,0.4)";
-                                }}
-                            >
-                                <option value="" style={{ backgroundColor: "#e87d24", color: "#fff" }}>All Semesters</option>
-                                <option value="October 2026" style={{ backgroundColor: "#e87d24", color: "#fff" }}>October 2026</option>
-                                <option value="Spring" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Term 251</option>
-                                <option value="Summer" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Term 252</option>
-                                <option value="Fall" style={{ backgroundColor: "#e87d24", color: "#fff" }}>Last Year</option>
-                            </select>
-                            <div style={{
-                                position: "absolute", insetInlineEnd: "18px", top: "50%",
-                                transform: "translateY(-50%)",
-                                pointerEvents: "none",
-                                color: "#fff", fontSize: "0.8rem",
-                            }}>▼</div>
+                <section className="nl-section" aria-labelledby="nl-archive-title">
+                    <div className="nl-section__head">
+                        <div>
+                            <h2 id="nl-archive-title" className="nl-section__title">Newsletter archive</h2>
+                            <p className="nl-archive__intro">Earlier newsletters and the year booklet.</p>
                         </div>
                     </div>
 
-                    <div style={{
-                        display: "flex",
-                        justifyContent: "center",
-                        gap: "clamp(20px, 7vw, 48px)",
-                        marginTop: "52px",
-                        flexWrap: "wrap",
-                    }}>
-                        {[
-                            { number: "15+", label: "Events" },
-                            { number: "3", label: "Semesters" },
-                            { number: "100+", label: "Members" },
-                        ].map((stat, i) => (
-                            <div key={i} style={{ textAlign: "center" }}>
-                                <div style={{
-                                    fontSize: "2rem", fontWeight: "800",
-                                    color: "#fff", lineHeight: "1",
-                                    textShadow: "0 2px 10px rgba(0,0,0,0.2)",
-                                }}>{stat.number}</div>
-                                <div style={{
-                                    fontSize: "0.85rem", color: "rgba(255,255,255,0.7)",
-                                    marginTop: "6px", fontWeight: "500",
-                                    textTransform: "uppercase", letterSpacing: "1px",
-                                }}>{stat.label}</div>
+                    <div className="nl-tabs" role="group" aria-label="Choose an archive">
+                        {ARCHIVE.map((tab) => (
+                            <button key={tab.id} type="button" aria-pressed={archiveTab === tab.id} onClick={() => setArchiveTab(tab.id)}>
+                                {tab.label}
+                            </button>
+                        ))}
+                    </div>
+
+                    <div className="nl-archive__panel" key={archiveTab}>
+                        {archiveTab === "Summer" && (
+                            <div className="nl-soon">
+                                <p className="nl-soon__icon" aria-hidden="true">⏳</p>
+                                <h3 className="nl-soon__title">Coming Soon</h3>
+                                <p className="nl-soon__text">
+                                    Term 252 content is on its way. Stay tuned for upcoming events, seminars, and highlights!
+                                </p>
+                            </div>
+                        )}
+
+                        {archiveTab === "Fall" && (
+                            <div className="nl-group">
+                                <div className="nl-group__head">
+                                    <h3 className="nl-group__title">Year Booklet</h3>
+                                </div>
+                                <div className="nl-yearbook">
+                                    <iframe src={YEARBOOK_URL} title="Year Booklet" loading="lazy" allowFullScreen />
+                                </div>
+                            </div>
+                        )}
+
+                        {archiveGroups.map((group) => (
+                            <div key={group.month} className="nl-group">
+                                <div className="nl-group__head">
+                                    <h3 className="nl-group__title">{group.month}</h3>
+                                    <p className="nl-group__count">{articleCount(group.newsletters.length)}</p>
+                                </div>
+                                <ArticleGrid articles={group.newsletters} headingLevel={4} onRead={openReader} />
                             </div>
                         ))}
                     </div>
-                </div>
+                </section>
             </div>
 
-            {/* Term 252 — Coming Soon */}
-            {searchSemester === "Summer" && (
-                <div style={{
-                    display: "flex",
-                    flexDirection: "column",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    padding: "clamp(60px, 14vw, 100px) 20px",
-                    textAlign: "center",
-                }}>
-                    <div style={{
-                        fontSize: "5rem",
-                        marginBottom: "24px",
-                        lineHeight: "1",
-                        animation: "float 3s ease-in-out infinite",
-                    }}>⏳</div>
-                    <h2 style={{
-                        fontSize: "clamp(2.25rem, 11vw, 3.5rem)",
-                        fontWeight: "800",
-                        color: "#1a1a1a",
-                        marginBottom: "16px",
-                        letterSpacing: "-1px",
-                        animation: "float 3s ease-in-out infinite",
-                        animationDelay: "0.3s",
-                    }}>Coming Soon</h2>
-                    <p style={{
-                        fontSize: "1.2rem",
-                        color: "#3a2800",
-                        maxWidth: "480px",
-                        lineHeight: "1.7",
-                        opacity: 0.75,
-                        animation: "float 3s ease-in-out infinite",
-                        animationDelay: "0.6s",
-                    }}>
-                        Term 252 content is on its way. Stay tuned for upcoming events, seminars, and highlights!
-                    </p>
-                </div>
-            )}
+            <Reader reader={reader} setReader={setReader} />
+        </div>
+    );
+}
 
-            {/* Last Year — Yearbook */}
-            {searchSemester === "Fall" && (
-                <div style={styles.sectionWrap}>
-                    <h2 style={{ ...styles.monthTitle, fontSize: "clamp(2rem, 9vw, 3rem)" }}>Year Booklet</h2>
-                    <div style={styles.yearbookContainer}>
-                        <iframe
-                            src="https://online.fliphtml5.com/kslxc/zrfq/"
-                            style={styles.yearbookIframe}
-                            title="Year Booklet"
-                            allowFullScreen
-                        />
+function ArticleGrid({ articles, headingLevel, onRead }) {
+    return (
+        <ul className="nl-grid">
+            {articles.map((article, index) => (
+                <li key={article.title}>
+                    <ArticleCard
+                        article={article}
+                        headingLevel={headingLevel}
+                        onRead={(event) => onRead(articles, index, event.currentTarget)}
+                    />
+                </li>
+            ))}
+        </ul>
+    );
+}
+
+// Photos fill the frame. Posters are shown whole over a blurred copy of themselves.
+function Media({ article, alt }) {
+    if (!article.image) return <div className="nl-media" aria-hidden="true" />;
+    const isPoster = article.imageFit === "contain";
+    return (
+        <div className={`nl-media${isPoster ? " nl-media--poster" : ""}`}>
+            {isPoster && <img className="nl-media__backdrop" src={article.image} alt="" aria-hidden="true" />}
+            <img className="nl-media__img" src={article.image} alt={alt} loading="lazy" decoding="async" />
+        </div>
+    );
+}
+
+function ArticleCard({ article, headingLevel, onRead }) {
+    const Heading = `h${headingLevel}`;
+    const titleId = useId();
+    return (
+        <article className="nl-card" aria-labelledby={titleId}>
+            <Media article={article} alt="" />
+            <div className="nl-card__body">
+                {article.date && <p className="nl-card__date">{article.date}</p>}
+                <Heading id={titleId} className="nl-card__title">{article.title}</Heading>
+                <p className="nl-card__desc">{article.description}</p>
+                <button type="button" className="nl-card__read" onClick={onRead} aria-describedby={titleId}>
+                    Read article<span aria-hidden="true">→</span>
+                </button>
+            </div>
+        </article>
+    );
+}
+
+// The full article in a modal dialog: focus stays inside, Escape closes it,
+// and focus returns to the button that opened it.
+function Reader({ reader, setReader }) {
+    const dialog = useRef(null);
+    const textPanel = useRef(null);
+    const article = reader ? reader.articles[reader.index] : null;
+    const total = reader ? reader.articles.length : 0;
+    const isOpen = !!reader;
+
+    const close = () => {
+        const opener = reader?.opener;
+        setReader(null);
+        opener?.focus();
+    };
+    const step = (delta) => setReader((r) => ({ ...r, index: (r.index + delta + r.articles.length) % r.articles.length }));
+
+    useEffect(() => {
+        const el = dialog.current;
+        if (isOpen && !el.open) el.showModal();
+        if (!isOpen && el.open) el.close();
+    }, [isOpen]);
+
+    // Each article starts at the top of its text.
+    useEffect(() => {
+        if (textPanel.current) textPanel.current.scrollTop = 0;
+    }, [reader?.index]);
+
+    // Arrow keys move between articles wherever focus is while the view is open.
+    useEffect(() => {
+        if (!isOpen || total < 2) return undefined;
+        const onKey = (event) => {
+            if (event.key === "ArrowRight") step(1);
+            if (event.key === "ArrowLeft") step(-1);
+        };
+        window.addEventListener("keydown", onKey);
+        return () => window.removeEventListener("keydown", onKey);
+    });
+
+    return (
+        <dialog
+            ref={dialog}
+            className="nl-reader"
+            aria-labelledby="nl-reader-title"
+            onCancel={(event) => { event.preventDefault(); close(); }}
+            onClick={(event) => { if (event.target === dialog.current) close(); }}
+        >
+            {article && (
+                <div className="nl-reader__layout">
+                    <Media article={{ ...article, imageFit: "contain" }} alt={article.title} />
+                    <div className="nl-reader__text" ref={textPanel}>
+                        <div className="nl-reader__bar">
+                            <span className="nl-reader__count">{reader.index + 1} of {total}</span>
+                            <button type="button" className="nl-reader__close" onClick={close} aria-label="Close article">×</button>
+                        </div>
+                        {article.date && <p className="nl-reader__date">{article.date}</p>}
+                        <h2 id="nl-reader-title" className="nl-reader__title">{article.title}</h2>
+                        <p className="nl-reader__body">{article.fullText}</p>
+                        {total > 1 && (
+                            <div className="nl-reader__nav">
+                                <button type="button" onClick={() => step(-1)}>← Previous article</button>
+                                <button type="button" onClick={() => step(1)}>Next article →</button>
+                            </div>
+                        )}
                     </div>
                 </div>
             )}
-
-            {/* Newsletter cards */}
-            {searchSemester !== "Fall" && searchSemester !== "Summer" && (
-                <div style={{ ...styles.sectionWrap, maxWidth: "100%", margin: "0" }}>
-                    {filteredMonths.map((monthData, monthIndex) => (
-                        <div key={monthIndex}>
-                            <h2 style={styles.monthTitle}>{monthData.month}</h2>
-                            <div style={styles.newslettersGrid}>
-                                {monthData.newsletters.map((newsletter, index) => {
-                                    const cardKey = `${monthIndex}-${index}`;
-                                    const isFlipped = flippedCards[cardKey];
-                                    return (
-                                        <div key={index} style={styles.newsletterCard}>
-                                            <div style={{
-                                                ...styles.cardInner,
-                                                ...(isFlipped ? styles.cardInnerFlipped : {})
-                                            }}>
-                                                {/* Front of Card */}
-                                                <div
-                                                    style={styles.cardFace}
-                                                    inert={isFlipped}
-                                                    onMouseEnter={(e) => {
-                                                        if (!isFlipped) {
-                                                            e.currentTarget.style.transform = "translateY(-10px)";
-                                                            e.currentTarget.style.boxShadow = "0 15px 40px rgba(232, 125, 36, 0.3)";
-                                                            e.currentTarget.style.borderColor = "#e87d24";
-                                                        }
-                                                    }}
-                                                    onMouseLeave={(e) => {
-                                                        if (!isFlipped) {
-                                                            e.currentTarget.style.transform = "translateY(0)";
-                                                            e.currentTarget.style.boxShadow = "none";
-                                                            e.currentTarget.style.borderColor = "#2a2a2a";
-                                                        }
-                                                    }}
-                                                >
-                                                    {/* Image with fade-into-black gradient at bottom */}
-                                                    <div style={styles.imageWrapper}>
-                                                        {newsletter.image && (
-                                                            <img
-                                                                src={newsletter.image}
-                                                                alt={newsletter.title}
-                                                                style={{
-                                                                    ...styles.newsletterImage,
-                                                                    ...(newsletter.imageFit && { objectFit: newsletter.imageFit }),
-                                                                }}
-                                                            />
-                                                        )}
-                                                        {/* A whole poster keeps its bottom edge visible, so it gets no fade. */}
-                                                        {!newsletter.imageFit && <div style={styles.imageFade} />}
-                                                    </div>
-
-                                                    <div style={styles.newsletterContent}>
-                                                        <div style={styles.newsletterDate}>{newsletter.date}</div>
-                                                        <h3 style={styles.newsletterTitle}>{newsletter.title}</h3>
-                                                        <p style={styles.newsletterDescription}>{newsletter.description}</p>
-                                                        <button
-                                                            data-flip-focus={`${cardKey}-front`}
-                                                            onClick={(e) => handleCardFlip(monthIndex, index, e)}
-                                                            style={styles.readMoreBtn}
-                                                            onMouseEnter={(e) => { e.target.style.gap = "12px"; }}
-                                                            onMouseLeave={(e) => { e.target.style.gap = "8px"; }}
-                                                        >
-                                                            Read More →
-                                                        </button>
-                                                    </div>
-                                                </div>
-
-                                                {/* Back of Card */}
-                                                <div style={{ ...styles.cardFace, ...styles.cardBack }} inert={!isFlipped}>
-                                                    <div style={styles.backContent}>
-                                                        <div style={styles.newsletterDate}>{newsletter.date}</div>
-                                                        <h3 style={styles.newsletterTitle}>{newsletter.title}</h3>
-                                                        <p style={styles.backText}>{newsletter.fullText}</p>
-                                                    </div>
-                                                    <button
-                                                        data-flip-focus={`${cardKey}-back`}
-                                                        onClick={(e) => handleCardFlip(monthIndex, index, e)}
-                                                        style={styles.flipBackBtn}
-                                                        onMouseEnter={(e) => {
-                                                            e.target.style.transform = "translateY(-2px)";
-                                                            e.target.style.boxShadow = "0 5px 15px rgba(232, 125, 36, 0.4)";
-                                                        }}
-                                                        onMouseLeave={(e) => {
-                                                            e.target.style.transform = "translateY(0)";
-                                                            e.target.style.boxShadow = "none";
-                                                        }}
-                                                    >
-                                                        ← Back to Overview
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    );
-                                })}
-                            </div>
-                        </div>
-                    ))}
-                </div>
-            )}
-        </div>
-        </>
+        </dialog>
     );
 }
 

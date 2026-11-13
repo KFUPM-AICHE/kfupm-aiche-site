@@ -1,85 +1,81 @@
 import { expect, test } from '@playwright/test';
 import { ALL_WIDTHS, PHONE_AND_TABLET_WIDTHS, expectNoSidewaysScroll, openFully, screen } from './support/site.js';
 
-const frontButtons = (page) => page.locator('[data-flip-focus$="-front"]');
-const backButtonOf = (page, frontButton) => frontButton.getAttribute('data-flip-focus')
-  .then((id) => page.locator(`[data-flip-focus="${id.replace(/-front$/, '-back')}"]`));
+const LATEST_TITLE = 'KFUPM AIChE – October 2026 Highlights';
+const readButtons = (page) => page.getByRole('main').getByRole('button', { name: 'Read article' });
+const reader = (page) => page.locator('dialog[open]');
+const archiveTabs = (page) => page.getByRole('group', { name: 'Choose an archive' }).getByRole('button');
 
-// Turned over means the card's 3D wrapper has a rotation applied.
-const isTurnedOver = (button) => button.evaluate((element) => {
-  let wrapper = element.parentElement;
-  while (wrapper && getComputedStyle(wrapper).transformStyle !== 'preserve-3d') {
-    wrapper = wrapper.parentElement;
-  }
-  return !new DOMMatrix(getComputedStyle(wrapper).transform).isIdentity;
-});
-
-// Text that sticks out of the screen, or is cut off by its own box, on the visible side of cards.
+// Text that sticks out of the screen, or is cut off sideways by its own box.
 const findLayoutProblems = (page) => page.evaluate(() => {
   const problems = [];
   const screenWidth = document.documentElement.clientWidth;
-  const elements = document.querySelectorAll('main :is(h1, h2, h3, p, button, select, iframe)');
-  for (const element of elements) {
-    if (element.closest('[inert]')) continue;
+  for (const element of document.querySelectorAll('main :is(h1, h2, h3, h4, p, button, iframe)')) {
+    if (element.closest('dialog')) continue;
     const box = element.getBoundingClientRect();
     if (!box.width) continue;
     const label = `${element.tagName} "${(element.innerText || '').slice(0, 30)}"`;
     if (box.left < -0.5 || box.right > screenWidth + 0.5) problems.push(`off screen: ${label}`);
-    const hasOwnLayout = !['IFRAME', 'SELECT'].includes(element.tagName);
-    if (hasOwnLayout && element.scrollWidth > element.clientWidth + 1) problems.push(`cut off: ${label}`);
+    if (element.tagName !== 'IFRAME' && element.scrollWidth > element.clientWidth + 1) problems.push(`cut off: ${label}`);
   }
   return problems;
+});
+
+test('the latest issue is October 2026 and comes first', async ({ page }) => {
+  await page.goto('/newsletter', { waitUntil: 'domcontentloaded' });
+  await expect(page.getByRole('main').locator('h2').first()).toHaveText(LATEST_TITLE);
+  // 5 October articles plus the 15 Term 251 articles shown in the archive by default.
+  await expect(readButtons(page)).toHaveCount(20);
 });
 
 for (const width of PHONE_AND_TABLET_WIDTHS) {
   test.describe(`layout at ${width}px`, () => {
     test.use(screen(width));
 
-    test('every semester filter fits the screen', async ({ page }) => {
+    test('every archive view fits the screen', async ({ page }) => {
       await openFully(page, '/newsletter');
-      const filter = page.getByRole('main').locator('select');
-      const values = await filter.locator('option').evaluateAll((options) => options.map((o) => o.value));
-      expect(values.length).toBeGreaterThan(1);
-
-      for (const value of values) {
-        await filter.selectOption(value);
+      const count = await archiveTabs(page).count();
+      expect(count).toBeGreaterThan(1);
+      for (let i = 0; i < count; i++) {
+        const tab = archiveTabs(page).nth(i);
+        await tab.click();
+        await expect(tab).toHaveAttribute('aria-pressed', 'true');
         await expectNoSidewaysScroll(page);
-        expect(await findLayoutProblems(page), `filter "${value}"`).toEqual([]);
+        expect(await findLayoutProblems(page), await tab.innerText()).toEqual([]);
       }
     });
 
-    test('every Read More button sits inside its card', async ({ page }) => {
+    test('every Read article button sits inside its card', async ({ page }) => {
       await openFully(page, '/newsletter');
-      const hiddenButtons = await frontButtons(page).evaluateAll((buttons) => buttons.filter((button) => {
-        let card = button.parentElement;
-        while (card && getComputedStyle(card).overflow !== 'hidden') card = card.parentElement;
-        return button.getBoundingClientRect().bottom > card.getBoundingClientRect().bottom + 0.5;
+      const outside = await readButtons(page).evaluateAll((buttons) => buttons.filter((button) => {
+        const card = button.closest('article').getBoundingClientRect();
+        return button.getBoundingClientRect().bottom > card.bottom + 0.5;
       }).length);
-      expect(await frontButtons(page).count()).toBeGreaterThan(0);
-      expect(hiddenButtons).toBe(0);
+      expect(await readButtons(page).count()).toBeGreaterThan(0);
+      expect(outside).toBe(0);
     });
 
-    test('a card turns over, its text can be read, and it turns back', async ({ page }) => {
+    test('the reading view shows the whole article within the screen and closes', async ({ page }) => {
       await openFully(page, '/newsletter');
-      const front = frontButtons(page).first();
-      const back = await backButtonOf(page, front);
+      await readButtons(page).first().click();
+      await expect(reader(page)).toBeVisible();
 
-      await front.click();
-      await expect.poll(() => isTurnedOver(front)).toBe(true);
-      await expect(back).toBeVisible();
-
-      const text = await back.evaluate((button) => {
-        const box = button.previousElementSibling;
+      const view = await reader(page).evaluate(async (dialog) => {
+        // Measure where the view settles, after its short opening movement.
+        await Promise.all(dialog.getAnimations().map((animation) => animation.finished));
+        const box = dialog.getBoundingClientRect();
+        const text = dialog.querySelector('.nl-reader__text');
         return {
-          fitsWidth: box.scrollWidth <= box.clientWidth + 1,
-          canReachAll: box.scrollHeight <= box.clientHeight || getComputedStyle(box).overflowY === 'auto',
-          buttonInCard: button.getBoundingClientRect().bottom <= button.parentElement.getBoundingClientRect().bottom + 0.5,
+          onScreen: box.left >= -0.5 && box.right <= innerWidth + 0.5 && box.bottom <= innerHeight + 0.5
+            || `${Math.round(box.left)},${Math.round(box.right)},${Math.round(box.bottom)} vs ${innerWidth}x${innerHeight}`,
+          canReachAll: text.scrollHeight <= text.clientHeight || getComputedStyle(text).overflowY === 'auto',
+          keepsLineBreaks: getComputedStyle(dialog.querySelector('.nl-reader__body')).whiteSpace === 'pre-line',
         };
       });
-      expect(text).toEqual({ fitsWidth: true, canReachAll: true, buttonInCard: true });
+      expect(view).toEqual({ onScreen: true, canReachAll: true, keepsLineBreaks: true });
 
-      await back.click();
-      await expect.poll(() => isTurnedOver(front)).toBe(false);
+      await page.getByRole('button', { name: 'Close article' }).click();
+      await expect(reader(page)).toHaveCount(0);
     });
   });
 }
@@ -87,15 +83,19 @@ for (const width of PHONE_AND_TABLET_WIDTHS) {
 test.describe('layout at 1440px', () => {
   test.use(screen(1440));
 
-  test('cards keep their desktop height and the page fits', async ({ page }) => {
+  test('cards in each row line up and posters are shown whole', async ({ page }) => {
     await openFully(page, '/newsletter');
     await expectNoSidewaysScroll(page);
-    const shortest = await frontButtons(page).evaluateAll((buttons) => Math.min(...buttons.map((button) => {
-      let card = button.parentElement;
-      while (card && getComputedStyle(card).overflow !== 'hidden') card = card.parentElement;
-      return card.getBoundingClientRect().height;
-    })));
-    expect(shortest).toBeGreaterThanOrEqual(550);
+    const layout = await page.evaluate(() => {
+      const cards = [...document.querySelectorAll('main article')].map((card) => card.getBoundingClientRect());
+      const rows = {};
+      for (const box of cards) (rows[Math.round(box.top)] ??= []).push(Math.round(box.height));
+      const media = [...document.querySelectorAll('main article .nl-media')].map((m) => m.getBoundingClientRect().height);
+      const posters = [...document.querySelectorAll('main .nl-media--poster .nl-media__img')].map((img) => getComputedStyle(img).objectFit);
+      const even = (heights) => Math.max(...heights) - Math.min(...heights) <= 1;
+      return { rowsEven: Object.values(rows).every(even), imagesSameHeight: even(media), posters };
+    });
+    expect(layout).toEqual({ rowsEven: true, imagesSameHeight: true, posters: ['contain', 'contain', 'contain'] });
   });
 });
 
@@ -103,81 +103,86 @@ for (const width of ALL_WIDTHS) {
   test.describe(`keyboard and screen readers at ${width}px`, () => {
     test.use(screen(width));
 
-    test('Tab skips the hidden side of every card', async ({ page }) => {
+    test('Tab reaches every Read article button once', async ({ page }) => {
       await page.goto('/newsletter', { waitUntil: 'domcontentloaded' });
-      const total = await frontButtons(page).count();
-      expect(total).toBeGreaterThan(0);
-
-      await page.getByRole('main').locator('select').focus();
-      const stops = [];
-      for (let i = 0; i < total + 75; i++) {
+      const total = await readButtons(page).count();
+      await readButtons(page).first().focus();
+      let reached = 1;
+      for (let i = 0; i < total + 20; i++) {
         await page.keyboard.press('Tab');
-        const stop = await page.evaluate(() => {
+        const where = await page.evaluate(() => {
           const element = document.activeElement;
-          return element.closest('main') ? element.getAttribute('data-flip-focus') ?? 'other' : null;
+          if (!element.closest('main')) return 'outside';
+          return element.matches('.nl-card__read') ? 'read' : 'other';
         });
-        if (stop === null) break;
-        stops.push(stop);
+        if (where === 'outside') break;
+        if (where === 'read') reached++;
       }
-      expect(stops.filter((stop) => stop.endsWith('-back'))).toEqual([]);
-      expect(stops.filter((stop) => stop.endsWith('-front'))).toHaveLength(total);
+      expect(reached).toBe(total);
     });
 
-    test('focus follows the card as it turns over and back', async ({ page }) => {
+    test('the reading view keeps focus inside and returns it on Escape', async ({ page }) => {
       await page.goto('/newsletter', { waitUntil: 'domcontentloaded' });
-      const front = frontButtons(page).first();
-      const back = await backButtonOf(page, front);
-
-      await front.focus();
+      const button = readButtons(page).nth(2);
+      await button.focus();
       await page.keyboard.press('Enter');
-      await expect(back).toBeFocused();
+      await expect(reader(page)).toBeVisible();
 
-      // Moving backwards must not land on this card's now-hidden front.
-      await page.keyboard.press('Shift+Tab');
-      await expect(front).not.toBeFocused();
+      // Focus may pass to the browser's own controls, but never to the page behind the view.
+      for (let i = 0; i < 8; i++) {
+        await page.keyboard.press('Tab');
+        expect(await page.evaluate(() => document.activeElement === document.body || !!document.activeElement.closest('dialog[open]'))).toBe(true);
+      }
 
-      await back.focus();
-      await page.keyboard.press('Enter');
-      await expect(front).toBeFocused();
+      await page.keyboard.press('Escape');
+      await expect(reader(page)).toHaveCount(0);
+      await expect(button).toBeFocused();
     });
 
-    test('screen readers are only told about the visible side', async ({ page }) => {
+    test('screen readers only hear the reading view while it is open', async ({ page }) => {
       await page.goto('/newsletter', { waitUntil: 'domcontentloaded' });
-      await expect(frontButtons(page).first()).toBeVisible();
-      const total = await frontButtons(page).count();
-
-      // Chrome's own accessibility tree is what a screen reader receives.
+      const total = await readButtons(page).count();
       const session = await page.context().newCDPSession(page);
       await session.send('Accessibility.enable');
-      const announcedButtons = async () => {
+      const announced = async () => {
         const { nodes } = await session.send('Accessibility.getFullAXTree');
-        const names = nodes
-          .filter((node) => !node.ignored && node.role?.value === 'button')
-          .map((node) => node.name?.value ?? '');
-        return {
-          readMore: names.filter((name) => /read more/i.test(name)).length,
-          backToOverview: names.filter((name) => /back to overview/i.test(name)).length,
-        };
+        const names = nodes.filter((n) => !n.ignored && n.role?.value === 'button').map((n) => n.name?.value ?? '');
+        return { read: names.filter((n) => n === 'Read article').length, close: names.filter((n) => n === 'Close article').length };
       };
 
-      expect(await announcedButtons()).toEqual({ readMore: total, backToOverview: 0 });
-
-      const front = frontButtons(page).first();
-      await front.focus();
-      await page.keyboard.press('Enter');
-      await expect(await backButtonOf(page, front)).toBeFocused();
-      expect(await announcedButtons()).toEqual({ readMore: total - 1, backToOverview: 1 });
+      expect(await announced()).toEqual({ read: total, close: 0 });
+      await readButtons(page).first().click();
+      await expect(reader(page)).toBeVisible();
+      expect(await announced()).toEqual({ read: 0, close: 1 });
     });
 
-    test('tapping or clicking a card does not make the page jump', async ({ page }) => {
+    test('arrow keys move between articles in the reading view', async ({ page }) => {
+      await page.goto('/newsletter', { waitUntil: 'domcontentloaded' });
+      await readButtons(page).first().click();
+      const title = reader(page).getByRole('heading', { level: 2 });
+      await expect(title).toHaveText('Beyond Horizons');
+      await page.keyboard.press('ArrowRight');
+      await expect(title).toHaveText('KFUPM AIChE Opening Ceremony');
+      await page.keyboard.press('ArrowLeft');
+      await expect(title).toHaveText('Beyond Horizons');
+
+      // The Next button keeps working from the keyboard after the article changes.
+      const next = reader(page).getByRole('button', { name: 'Next article →' });
+      await next.focus();
+      await page.keyboard.press('Enter');
+      await expect(title).toHaveText('KFUPM AIChE Opening Ceremony');
+      await expect(next).toBeFocused();
+    });
+
+    test('opening and closing an article does not move the page', async ({ page }) => {
       await openFully(page, '/newsletter');
-      const front = frontButtons(page).first();
-      await front.scrollIntoViewIfNeeded();
+      const button = readButtons(page).nth(4);
+      await button.scrollIntoViewIfNeeded();
       const before = await page.evaluate(() => window.scrollY);
-
-      await front.click();
-      await expect.poll(() => isTurnedOver(front)).toBe(true);
-
+      await button.click();
+      await expect(reader(page)).toBeVisible();
+      await page.getByRole('button', { name: 'Close article' }).click();
+      await expect(reader(page)).toHaveCount(0);
       const after = await page.evaluate(() => window.scrollY);
       expect(Math.abs(after - before)).toBeLessThanOrEqual(1);
     });

@@ -1,0 +1,153 @@
+/* Newsletter page only. Every class starts with "nl-" so no other page is affected.
+   Colours follow the site: the #FFA837 page, the orange hero card, dark #1a1a1a article cards
+   and the #e87d24 accent. Text on the orange page is dark, because white on #FFA837 is too faint. */
+
+.nl-page {
+  min-height: 100vh;
+  padding: clamp(20px, 4vw, 40px) clamp(16px, 4vw, 40px) clamp(56px, 8vw, 96px);
+  background: #ffa837;
+  color: #1a1a1a;
+}
+.nl-shell { max-width: 1200px; margin: 0 auto; }
+.nl-page :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 3px; }
+.nl-card :focus-visible, .nl-reader :focus-visible { outline-color: #ffa837; }
+.nl-visually-hidden {
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; margin: -1px;
+}
+
+/* ───────── Hero ───────── */
+.nl-hero {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: end; gap: 24px 48px;
+  padding: clamp(28px, 5vw, 52px) clamp(20px, 5vw, 52px);
+  border-radius: 24px;
+  background: linear-gradient(135deg, #e87d24 0%, #ff6b00 45%, #cc5500 100%);
+  color: #fff;
+}
+.nl-hero__badge {
+  display: inline-block; margin: 0 0 18px; padding: 6px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.35); border-radius: 50px; background: rgba(255, 255, 255, 0.15);
+  font-size: 0.8rem; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+}
+.nl-hero__title { margin: 0 0 12px; font-size: clamp(2.1rem, 4vw, 2.75rem); font-weight: 800; line-height: 1.1; letter-spacing: -0.5px; color: #fff; }
+.nl-hero__lead { margin: 0; max-width: 52ch; font-size: 1.05rem; line-height: 1.7; color: rgba(255, 255, 255, 0.9); }
+.nl-stats { display: flex; gap: clamp(20px, 4vw, 40px); margin: 0; }
+.nl-stats div { display: grid; text-align: center; }
+.nl-stats dd { order: -1; margin: 0; font-size: 1.75rem; font-weight: 800; line-height: 1; }
+.nl-stats dt { margin-top: 6px; font-size: 0.78rem; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; color: rgba(255, 255, 255, 0.8); }
+@media (max-width: 760px) {
+  .nl-hero { grid-template-columns: 1fr; }
+  .nl-stats { justify-content: flex-start; }
+}
+
+/* ───────── Sections ───────── */
+.nl-section { margin-top: clamp(40px, 6vw, 64px); }
+.nl-section__head {
+  display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 8px 24px;
+  margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid rgba(26, 26, 26, 0.18);
+}
+.nl-section__label { margin: 0 0 6px; font-size: 0.9rem; font-weight: 700; color: #3a2800; }
+.nl-section__title { margin: 0; font-size: clamp(1.5rem, 2.6vw, 2rem); font-weight: 800; line-height: 1.2; letter-spacing: -0.3px; color: #1a1a1a; }
+.nl-section__meta { margin: 0; font-size: 0.95rem; font-weight: 600; color: #3a2800; }
+
+/* ───────── Article cards ───────── */
+.nl-grid {
+  list-style: none; margin: 0; padding: 0;
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(min(300px, 100%), 1fr)); gap: clamp(16px, 2.4vw, 28px);
+}
+.nl-grid > li { display: flex; min-width: 0; }
+.nl-card {
+  display: flex; flex-direction: column; width: 100%; overflow: hidden;
+  border: 1px solid #2a2a2a; border-radius: 16px; background: #1a1a1a; color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.nl-card:hover, .nl-card:focus-within { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(90, 40, 0, 0.25); }
+.nl-card__body { display: flex; flex: 1; flex-direction: column; gap: 8px; padding: 20px 22px 22px; }
+.nl-card__date { margin: 0; font-size: 0.85rem; font-weight: 700; color: #e87d24; }
+.nl-card__title { margin: 0; font-size: 1.2rem; font-weight: 700; line-height: 1.3; color: #fff; overflow-wrap: break-word; }
+.nl-card__desc {
+  margin: 0; font-size: 0.95rem; line-height: 1.6; color: #c9c9c9;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.nl-card__read {
+  display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; margin-top: auto; padding: 10px 0 0;
+  border: 0; background: none; color: #ffa837; font: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  transition: gap 0.2s ease, color 0.2s ease;
+}
+.nl-card__read:hover { gap: 10px; color: #fff; }
+
+/* Photos fill the frame. Posters are shown whole over a blurred copy of themselves, so nothing is cut off. */
+.nl-media { position: relative; aspect-ratio: 4 / 3; overflow: hidden; background: #222; }
+.nl-media__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transition: transform 0.4s ease; }
+.nl-card:hover .nl-media__img { transform: scale(1.03); }
+.nl-media__backdrop {
+  position: absolute; inset: -24px; width: calc(100% + 48px); height: calc(100% + 48px); object-fit: cover;
+  filter: blur(18px) brightness(0.55) saturate(1.1);
+}
+.nl-media--poster .nl-media__img { object-fit: contain; padding: 12px; filter: drop-shadow(0 8px 18px rgba(0, 0, 0, 0.45)); }
+
+/* ───────── Archive ───────── */
+.nl-archive__intro { margin: 6px 0 0; max-width: 56ch; color: #3a2800; }
+.nl-tabs { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 28px; }
+.nl-tabs button {
+  padding: 10px 18px; border: 2px solid rgba(26, 26, 26, 0.3); border-radius: 50px;
+  background: transparent; color: #1a1a1a; font: inherit; font-size: 0.95rem; font-weight: 700; cursor: pointer;
+  transition: border-color 0.2s ease, background-color 0.2s ease, color 0.2s ease;
+}
+.nl-tabs button:hover { border-color: #1a1a1a; }
+.nl-tabs button[aria-pressed='true'] { border-color: #1a1a1a; background: #1a1a1a; color: #fff; }
+.nl-archive__panel { animation: nl-fade 0.2s ease; }
+.nl-group + .nl-group { margin-top: 40px; }
+.nl-group__head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: 4px 16px; margin-bottom: 16px; }
+.nl-group__title { margin: 0; font-size: 1.25rem; font-weight: 800; color: #1a1a1a; }
+.nl-group__count { margin: 0; font-size: 0.9rem; font-weight: 600; color: #3a2800; }
+.nl-soon { padding: clamp(36px, 6vw, 56px) 24px; border-radius: 16px; background: rgba(255, 255, 255, 0.3); text-align: center; }
+.nl-soon__icon { margin: 0 0 12px; font-size: 2.5rem; line-height: 1; }
+.nl-soon__title { margin: 0 0 10px; font-size: 1.6rem; font-weight: 800; color: #1a1a1a; }
+.nl-soon__text { margin: 0 auto; max-width: 46ch; line-height: 1.7; color: #3a2800; }
+.nl-yearbook { overflow: hidden; border-radius: 16px; background: #1a1a1a; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25); }
+.nl-yearbook iframe { display: block; width: 100%; height: clamp(480px, 80vw, 800px); border: 0; }
+
+/* ───────── Reading view ───────── */
+html:has(.nl-reader[open]) { overflow: hidden; }
+.nl-reader {
+  width: min(1080px, calc(100vw - 32px)); max-width: none; max-height: calc(100dvh - 32px);
+  /* The site's global reset removes the margin that centres a dialog. */
+  margin: auto; padding: 0; border: 0; border-radius: 20px; overflow: hidden; background: #1a1a1a; color: #fff;
+}
+.nl-reader[open] { animation: nl-pop 0.18s ease; }
+.nl-reader::backdrop { background: rgba(0, 0, 0, 0.6); }
+.nl-reader__layout { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); max-height: calc(100dvh - 32px); }
+.nl-reader .nl-media { aspect-ratio: auto; height: 100%; min-height: 420px; background: #111; }
+.nl-reader .nl-media__img { object-fit: contain; padding: 20px; filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.5)); }
+.nl-reader__text { display: flex; flex-direction: column; gap: 12px; padding: clamp(22px, 3vw, 36px); overflow-y: auto; }
+.nl-reader__bar { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.nl-reader__count { font-size: 0.85rem; font-weight: 600; color: #bbb; }
+.nl-reader__close {
+  display: grid; place-items: center; width: 40px; height: 40px; flex: none;
+  border: 1px solid #3a3a3a; border-radius: 50%; background: none; color: #fff; font-size: 1.4rem; line-height: 1; cursor: pointer;
+}
+.nl-reader__close:hover { border-color: #e87d24; }
+.nl-reader__date { margin: 4px 0 0; font-size: 0.9rem; font-weight: 700; color: #e87d24; }
+.nl-reader__title { margin: 0; font-size: clamp(1.4rem, 2.4vw, 1.85rem); font-weight: 800; line-height: 1.25; color: #fff; }
+.nl-reader__body { margin: 0; font-size: 1rem; line-height: 1.75; color: #d6d6d6; white-space: pre-line; }
+.nl-reader__nav { display: flex; justify-content: space-between; gap: 10px; margin-top: auto; padding-top: 16px; }
+.nl-reader__nav button {
+  padding: 10px 16px; border: 1px solid #3a3a3a; border-radius: 10px; background: #222; color: #fff;
+  font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: border-color 0.2s ease;
+}
+.nl-reader__nav button:hover { border-color: #e87d24; }
+@media (max-width: 760px) {
+  .nl-reader { width: 100vw; max-height: none; height: 100dvh; border-radius: 0; }
+  .nl-reader__layout { grid-template-columns: 1fr; grid-template-rows: 38vh minmax(0, 1fr); height: 100dvh; max-height: none; }
+  .nl-reader .nl-media { min-height: 0; }
+}
+
+@keyframes nl-fade { from { opacity: 0; } }
+@keyframes nl-pop { from { opacity: 0; transform: translateY(8px); } }
+
+@media (prefers-reduced-motion: reduce) {
+  .nl-page *, .nl-reader, .nl-reader * { animation: none !important; transition: none !important; }
+  .nl-card:hover, .nl-card:focus-within { transform: none; }
+  .nl-card:hover .nl-media__img { transform: none; }
+}
